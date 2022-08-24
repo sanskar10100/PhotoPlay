@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.sanskar.photoplay.data.TopRated
 import dev.sanskar.photoplay.network.MoviesBackendService
 import dev.sanskar.photoplay.util.UiState
+import dev.sanskar.photoplay.util.networkResult
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -22,11 +23,8 @@ class HomeViewModel @Inject constructor(
 
     private fun getTopRated() {
         viewModelScope.launch {
-            val apiResult = api.getTopRatedMovies()
-            if (apiResult.isSuccessful) {
-                topRatedMovies.value = UiState.Success(apiResult.body()!!)
-            } else {
-                topRatedMovies.value = UiState.Error("Error: ${apiResult.code()}")
+            topRatedMovies.value = networkResult {
+                api.getTopRatedMovies()
             }
         }
     }
