@@ -12,6 +12,11 @@ interface MoviesBackendService {
         @Query("page") page: Int = 1,
     ): Response<MoviesResponse>
 
+    @GET("movie/top_rated")
+    suspend fun getTopRatedMovies(
+        @Query("page") page: Int = 1,
+    ): Response<MoviesResponse>
+
     @GET("search/movie")
     suspend fun getMoviesForQuery(
         @Query("query") query: String,

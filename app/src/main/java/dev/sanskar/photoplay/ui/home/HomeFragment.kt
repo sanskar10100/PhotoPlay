@@ -8,6 +8,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.with
@@ -23,6 +24,8 @@ import androidx.compose.material.Icon
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
+import androidx.compose.material.Tab
+import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -120,6 +123,7 @@ class HomeFragment : Fragment() {
         var searchMode by remember { mutableStateOf(false) }
         val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.movies))
         val progress by animateLottieCompositionAsState(composition, iterations = LottieConstants.IterateForever)
+        var tabIndex by remember { mutableStateOf(0) }
         BackHandler(searchMode) {
             searchMode = false
         }
@@ -127,8 +131,8 @@ class HomeFragment : Fragment() {
         AnimatedContent(
             targetState = searchMode,
             transitionSpec = {
-                slideIntoContainer(AnimatedContentScope.SlideDirection.Up) with slideOutOfContainer(
-                    AnimatedContentScope.SlideDirection.Up)
+                slideIntoContainer(AnimatedContentScope.SlideDirection.Up, animationSpec = tween(500)) with slideOutOfContainer(
+                    AnimatedContentScope.SlideDirection.Up, animationSpec = tween(500))
             },
             modifier = Modifier.fillMaxWidth(),
         ) { state ->
@@ -165,6 +169,28 @@ class HomeFragment : Fragment() {
                         )
                     }
                     Divider()
+                    TabRow(selectedTabIndex = tabIndex) {
+                        Tab(
+                          selected = tabIndex == 0,
+                          onClick = {
+                              tabIndex = 0
+                              viewModel.getPopularMovies()
+                          },
+                          text = {
+                              Text("Popular")
+                          }
+                        )
+                        Tab(
+                          selected = tabIndex == 1,
+                          onClick = {
+                              tabIndex = 1
+                              viewModel.getTopRatedMovies()
+                          },
+                          text = {
+                              Text("Top Rated")
+                          }
+                        )
+                    }
                 }
             }
         }

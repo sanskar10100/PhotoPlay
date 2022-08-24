@@ -21,10 +21,20 @@ class HomeViewModel @Inject constructor(
         getPopularMovies()
     }
 
-    private fun getPopularMovies() {
+    fun getPopularMovies() {
+        moviesResponseMovies.value = UiState.Loading
         viewModelScope.launch {
             moviesResponseMovies.value = networkResult {
                 api.getPopularMovies()
+            }
+        }
+    }
+
+    fun getTopRatedMovies() {
+        moviesResponseMovies.value = UiState.Loading
+        viewModelScope.launch {
+            moviesResponseMovies.value = networkResult {
+                api.getTopRatedMovies()
             }
         }
     }
