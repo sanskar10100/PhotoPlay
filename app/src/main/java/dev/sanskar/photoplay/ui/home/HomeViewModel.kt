@@ -18,13 +18,13 @@ class HomeViewModel @Inject constructor(
     val moviesResponseMovies = MutableStateFlow<UiState<MoviesResponse>>(UiState.Loading)
 
     init {
-        getTopRated()
+        getPopularMovies()
     }
 
-    private fun getTopRated() {
+    private fun getPopularMovies() {
         viewModelScope.launch {
             moviesResponseMovies.value = networkResult {
-                api.getTopRatedMovies()
+                api.getPopularMovies()
             }
         }
     }

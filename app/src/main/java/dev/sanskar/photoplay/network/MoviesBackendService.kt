@@ -7,8 +7,8 @@ import retrofit2.http.Query
 
 interface MoviesBackendService {
 
-    @GET("movie/top_rated")
-    suspend fun getTopRatedMovies(
+    @GET("movie/popular")
+    suspend fun getPopularMovies(
         @Query("page") page: Int = 1,
     ): Response<MoviesResponse>
 
