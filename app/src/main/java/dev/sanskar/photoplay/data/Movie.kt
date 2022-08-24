@@ -1,6 +1,6 @@
 package dev.sanskar.photoplay.data
 
-data class Result(
+data class Movie(
     val adult: Boolean = false,
     val backdrop_path: String = "",
     val genre_ids: List<Int> = listOf(),
