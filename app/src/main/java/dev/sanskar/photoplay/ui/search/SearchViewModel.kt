@@ -1,4 +1,4 @@
-package dev.sanskar.photoplay.ui.home
+package dev.sanskar.photoplay.ui.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,23 +8,21 @@ import dev.sanskar.photoplay.network.MoviesBackendService
 import dev.sanskar.photoplay.util.UiState
 import dev.sanskar.photoplay.util.networkResult
 import javax.inject.Inject
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class SearchViewModel @Inject constructor(
     private val api: MoviesBackendService
 ) : ViewModel() {
-    val moviesResponseMovies = MutableStateFlow<UiState<MoviesResponse>>(UiState.Loading)
 
-    init {
-        getTopRated()
-    }
+    val searchResult = MutableStateFlow<UiState<MoviesResponse>>(UiState.Loading)
 
-    private fun getTopRated() {
+    fun search(query: String) {
         viewModelScope.launch {
-            moviesResponseMovies.value = networkResult {
-                api.getTopRatedMovies()
+            searchResult.value = networkResult {
+                api.getMoviesForQuery(query)
             }
         }
     }

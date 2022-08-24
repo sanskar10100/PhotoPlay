@@ -7,5 +7,17 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="dev.sanskar.photoplay.ui.home.HomeFragment"
-        android:label="HomeFragment" />
+        android:label="HomeFragment" >
+        <action
+            android:id="@+id/action_homeFragment_to_searchResultFragment"
+            app:destination="@id/searchResultFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchResultFragment"
+        android:name="dev.sanskar.photoplay.ui.search.SearchResultFragment"
+        android:label="SearchResultFragment" >
+        <argument
+            android:name="query"
+            app:argType="string" />
+    </fragment>
 </navigation>

@@ -55,7 +55,7 @@ fun MoviesGrid(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     AsyncImage(
-                        model = movie.backdrop_path.getDownloadUrl(),
+                        model = movie.poster_path?.getDownloadUrl() ?: movie.backdrop_path?.getDownloadUrl() ?: "",
                         contentDescription = null,
                         contentScale = ContentScale.FillBounds,
                         modifier = Modifier.clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)),

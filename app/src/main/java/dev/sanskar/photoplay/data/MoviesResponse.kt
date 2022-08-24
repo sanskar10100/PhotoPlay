@@ -1,6 +1,6 @@
 package dev.sanskar.photoplay.data
 
-data class TopRated(
+data class MoviesResponse(
     val page: Int,
     val results: List<Movie>,
     val total_pages: Int,
