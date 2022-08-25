@@ -6,6 +6,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.sanskar.photoplay.db.Watchlist
 import dev.sanskar.photoplay.db.WatchlistDao
 import dev.sanskar.photoplay.util.UiState
+import java.text.SimpleDateFormat
+import java.util.Locale
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,7 +26,7 @@ class WatchlistViewModel @Inject constructor(
 
     val watchlists = MutableStateFlow<UiState<List<Watchlist>>>(UiState.Loading)
 
-    fun getWatchlists() {
+    private fun getWatchlists() {
         viewModelScope.launch {
             db.getAllWatchlists().collect {
                 watchlists.value = if (it.isEmpty()) UiState.Empty else UiState.Success(it)
@@ -32,14 +34,10 @@ class WatchlistViewModel @Inject constructor(
         }
     }
 
-    fun addSample() {
+    fun addWatchlist(title: String, description: String) {
         viewModelScope.launch {
-            db.addWatchlist(Watchlist(
-                0,
-                "Personal",
-                "A collection of personally liked movies",
-                "some date"
-            ))
+            val today = SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.getDefault()).format(System.currentTimeMillis())
+            db.addWatchlist(Watchlist(0, title, description, today))
         }
     }
 
