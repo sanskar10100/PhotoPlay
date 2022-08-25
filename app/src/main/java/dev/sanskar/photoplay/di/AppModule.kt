@@ -67,5 +67,7 @@ object AppModule {
         "photoplay_db"
     ).build()
 
+    @Singleton
+    @Provides
     fun provideWatchlistDao(db: PhotoPlayDB) = db.watchlistDao()
 }

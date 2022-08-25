@@ -46,13 +46,11 @@ class SearchResultFragment : Fragment() {
     @Composable
     fun SearchScreen() {
         val state by viewModel.searchResult.collectAsStateWithLifecycle()
-        val loading by derivedStateOf {
-            state is UiState.Loading
-        }
         when (val state = state) {
             is UiState.Loading -> {
-                ProgressBar(loading)
+                ProgressBar(true)
             }
+            is UiState.Empty -> {}
             is UiState.Error -> {
                 Text(state.message)
             }

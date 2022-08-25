@@ -1,20 +1,23 @@
 package dev.sanskar.photoplay.db
 
+import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import kotlinx.coroutines.flow.Flow
 
+@Dao
 interface WatchlistDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun createWatchlist(watchlist: Watchlist)
+    suspend fun addWatchlist(watchlist: Watchlist)
 
     @Query("SELECT * FROM watchlist")
-    suspend fun getAllWatchlists(): List<Watchlist>
+    fun getAllWatchlists(): Flow<List<Watchlist>>
 
     @Query("SELECT * FROM watchlist WHERE id = :watchlistId")
-    suspend fun getWatchlist(watchlistId: Int)
+    suspend fun getWatchlist(watchlistId: Int): Watchlist?
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addMovie(movieEntity: MovieEntity)
@@ -37,6 +40,6 @@ interface WatchlistDao {
     @Query("DELETE FROM table_movies WHERE watchlistId = :watchlistId")
     suspend fun deleteMovies(watchlistId: Int)
 
-    @Query("DELETE FROM table_movies WHERE id = :id")
+    @Query("DELETE FROM table_movies WHERE id = :movieId")
     suspend fun deleteMovie(movieId: Int)
 }

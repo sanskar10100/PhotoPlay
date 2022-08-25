@@ -98,12 +98,11 @@ class HomeFragment : Fragment() {
     @Composable
     fun HomeContent(scaffoldState: ScaffoldState, modifier: Modifier = Modifier) {
         val state by viewModel.moviesResponseMovies.collectAsStateWithLifecycle()
-        val loading = derivedStateOf {
-            state is UiState.Loading
-        }
         when (val state = state) {
             is UiState.Loading -> {
+                ProgressBar(true)
             }
+            is UiState.Empty -> {}
             is UiState.Error -> {
                 val scope = rememberCoroutineScope()
                 LaunchedEffect(Unit) {
@@ -116,7 +115,6 @@ class HomeFragment : Fragment() {
                 MoviesGrid(movies = state.data.results, modifier)
             }
         }
-        ProgressBar(loading.value)
     }
 
     @OptIn(ExperimentalAnimationApi::class)
