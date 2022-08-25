@@ -2,26 +2,19 @@ package dev.sanskar.photoplay.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import dev.sanskar.photoplay.ui.theme.PhotoPlayTheme
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import dagger.hilt.android.AndroidEntryPoint
+import dev.sanskar.photoplay.R
+import dev.sanskar.photoplay.ui.home.HomeViewModel
 
-class MainActivity : ComponentActivity() {
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
-
         super.onCreate(savedInstanceState)
-        setContent {
-            PhotoPlayTheme {
-                Text("Hello")
-            }
-        }
+        setContentView(R.layout.activity_main)
     }
 }
