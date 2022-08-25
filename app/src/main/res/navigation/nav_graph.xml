@@ -11,6 +11,9 @@
         <action
             android:id="@+id/action_homeFragment_to_searchResultFragment"
             app:destination="@id/searchResultFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_watchlistFragment"
+            app:destination="@id/watchlistFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchResultFragment"
@@ -20,4 +23,8 @@
             android:name="query"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/watchlistFragment"
+        android:name="dev.sanskar.photoplay.ui.watchlist.WatchlistFragment"
+        android:label="WatchlistFragment" />
 </navigation>

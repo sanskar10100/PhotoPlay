@@ -28,7 +28,9 @@ import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Theaters
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -148,7 +150,17 @@ class HomeFragment : Fragment() {
                     Box(
                         modifier = Modifier.fillMaxWidth()
                     ) {
-
+                        Icon(
+                            imageVector = Icons.Default.Theaters,
+                            contentDescription = "Watchlist",
+                            modifier = Modifier
+                                .align(Alignment.CenterStart)
+                                .padding(start = 16.dp)
+                                .scale(1.5f)
+                                .clickWithRipple {
+                                    findNavController().navigate(R.id.action_homeFragment_to_watchlistFragment)
+                                }
+                        )
                         LottieAnimation(
                             composition = composition,
                             progress = { progress },
