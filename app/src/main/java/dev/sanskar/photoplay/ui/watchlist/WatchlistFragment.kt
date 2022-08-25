@@ -23,6 +23,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
+import androidx.compose.material.Card
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -57,6 +58,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import dagger.hilt.android.AndroidEntryPoint
 import dev.sanskar.photoplay.R
+import dev.sanskar.photoplay.db.Watchlist
 import dev.sanskar.photoplay.ui.theme.PhotoPlayTheme
 import dev.sanskar.photoplay.util.UiState
 
@@ -195,17 +197,38 @@ class WatchlistFragment : Fragment() {
                     }
                 }
                 is UiState.Success -> {
-                    LazyColumn(
-                        modifier = modifier
-                    ) {
-                        items(state.data) { watchlist ->
-                            Text(watchlist.name)
-                        }
-                    }
+                    Watchlists(watchlists = state.data)
                 }
             }
         }
     }
 
-
+    @Composable
+    fun Watchlists(watchlists: List<Watchlist>, modifier: Modifier = Modifier) {
+        LazyColumn(
+            modifier = modifier
+        ) {
+            items(watchlists) { watchlist ->
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    elevation = 0.dp,
+                ) {
+                    Column {
+                        Text(
+                            text = watchlist.name,
+                            style = MaterialTheme.typography.h2,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        )
+                        Text(
+                            text = watchlist.description,
+                            style = MaterialTheme.typography.body1,
+                            modifier = Modifier.padding(horizontal = 8.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
 }
