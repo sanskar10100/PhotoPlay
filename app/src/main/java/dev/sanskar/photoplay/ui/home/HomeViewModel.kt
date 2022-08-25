@@ -8,6 +8,7 @@ import dev.sanskar.photoplay.network.MoviesBackendService
 import dev.sanskar.photoplay.util.UiState
 import dev.sanskar.photoplay.util.networkResult
 import javax.inject.Inject
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 

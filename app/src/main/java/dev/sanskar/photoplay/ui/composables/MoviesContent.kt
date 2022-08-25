@@ -1,6 +1,10 @@
 package dev.sanskar.photoplay.ui.composables
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
@@ -16,6 +20,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,6 +39,7 @@ import dev.sanskar.photoplay.data.Movie
 import dev.sanskar.photoplay.util.UiState
 import dev.sanskar.photoplay.util.getDownloadUrl
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MoviesGrid(
     movies: List<Movie>,
@@ -46,10 +52,13 @@ fun MoviesGrid(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
     ) {
-        items(movies) { movie ->
+        items(movies, key = {
+            it.id
+        }) { movie ->
             Surface(
                 elevation = 3.dp,
-                shape = RoundedCornerShape(8.dp)
+                shape = RoundedCornerShape(8.dp),
+                modifier = Modifier.animateItemPlacement()
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
