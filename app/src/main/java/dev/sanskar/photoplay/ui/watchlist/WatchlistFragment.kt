@@ -24,6 +24,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -53,12 +54,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
+import androidx.navigation.fragment.findNavController
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import dagger.hilt.android.AndroidEntryPoint
 import dev.sanskar.photoplay.R
 import dev.sanskar.photoplay.db.Watchlist
+import dev.sanskar.photoplay.ui.composables.LottieEmpty
 import dev.sanskar.photoplay.ui.theme.PhotoPlayTheme
 import dev.sanskar.photoplay.util.UiState
 
@@ -182,18 +186,7 @@ class WatchlistFragment : Fragment() {
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = modifier.fillMaxSize()
                     ) {
-                        val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.empty))
-                        LottieAnimation(
-                            composition = composition,
-                            modifier = Modifier
-                                .fillMaxSize(0.7f)
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Text(
-                            text = "Create a watchlist to get started!",
-                            style = MaterialTheme.typography.h2,
-                            textAlign = TextAlign.Center,
-                        )
+                        LottieEmpty("Create a watchlist to get started!")
                     }
                 }
                 is UiState.Success -> {
@@ -203,6 +196,7 @@ class WatchlistFragment : Fragment() {
         }
     }
 
+    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     fun Watchlists(watchlists: List<Watchlist>, modifier: Modifier = Modifier) {
         LazyColumn(
@@ -213,7 +207,12 @@ class WatchlistFragment : Fragment() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
-                    elevation = 0.dp,
+                    onClick = {
+                        findNavController().navigate(
+                            WatchlistFragmentDirections.actionWatchlistFragmentToWatchlistDetailsFragment(
+                                watchlist.id)
+                        )
+                    }
                 ) {
                     Column {
                         Text(

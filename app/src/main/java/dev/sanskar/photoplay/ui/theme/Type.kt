@@ -8,7 +8,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import dev.sanskar.photoplay.R
 
-val fonts = FontFamily(
+val MontserratFontFamily = FontFamily(
     Font(R.font.montserrat_regular, weight = FontWeight.Normal),
     Font(R.font.montserrat_bold, weight = FontWeight.Bold),
     Font(R.font.montserrat_black, weight = FontWeight.Black),
@@ -24,12 +24,12 @@ val Typography = Typography(
         fontSize = 16.sp
     ),
     h3 = TextStyle(
-        fontFamily = fonts,
+        fontFamily = MontserratFontFamily,
         fontWeight = FontWeight.SemiBold,
         fontSize = 16.sp
     ),
     h2 = TextStyle(
-        fontFamily = fonts,
+        fontFamily = MontserratFontFamily,
         fontWeight =  FontWeight.Bold,
         fontSize = 20.sp
     ),

@@ -26,5 +26,22 @@
     <fragment
         android:id="@+id/watchlistFragment"
         android:name="dev.sanskar.photoplay.ui.watchlist.WatchlistFragment"
-        android:label="WatchlistFragment" />
+        android:label="WatchlistFragment" >
+        <action
+            android:id="@+id/action_watchlistFragment_to_watchlistDetailsFragment"
+            app:destination="@id/watchlistDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/watchlistDetailsFragment"
+        android:name="dev.sanskar.photoplay.ui.watchlist.WatchlistDetailsFragment"
+        android:label="WatchlistDetailsFragment" >
+        <argument
+            android:name="watchlistId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_watchlistDetailsFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>
