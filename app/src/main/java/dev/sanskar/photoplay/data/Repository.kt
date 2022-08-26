@@ -46,7 +46,7 @@ class Repository @Inject constructor(
         val watchlists = db.getAllWatchlistsOneShot()
         val checkList = mutableListOf<Pair<Watchlist, Boolean>>()
         watchlists.forEach { watchlist ->
-            if (movieEntries.any { it.id == watchlist.id }) {
+            if (movieEntries.any { it.watchlistId == watchlist.id }) {
                 checkList.add(Pair(watchlist, true))
             } else {
                 checkList.add(Pair(watchlist, false))
@@ -55,14 +55,15 @@ class Repository @Inject constructor(
         return checkList
     }
 
-    suspend fun updateWatchlistInclusionsForMovie(includeIn: List<Int>, id: Int, title: String, posterPath: String?, backdropPath: String?) {
-        val watchlists = db.getAllWatchlistsOneShot()
-        watchlists.forEach { watchlist ->
-            if (watchlist.id in includeIn) {
-                db.addMovie(MovieEntity(id, title, backdropPath, posterPath, watchlist.id))
+    suspend fun updateWatchlistInclusionsForMovie(includeIn: List<Pair<Watchlist, Boolean>>, id: Int, title: String, posterPath: String?, backdropPath: String?) {
+        includeIn.forEach { include ->
+            if (!include.second) {
+                db.deleteMovie(id, include.first.id)
             } else {
-                db.deleteMovie(id, watchlist.id)
+                db.addMovie(MovieEntity(id, title, posterPath, backdropPath, include.first.id))
             }
         }
     }
+
+    suspend fun removeMovieFromWatchlist(movieId: Int, watchlistId: Int) = db.deleteMovie(movieId, watchlistId)
 }

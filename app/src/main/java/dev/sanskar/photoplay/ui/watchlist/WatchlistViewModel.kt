@@ -41,4 +41,11 @@ class WatchlistViewModel @Inject constructor(
         }
     }
 
+    fun removeMovieFromWatchlist(movieId: Int, watchlistId: Int) {
+        viewModelScope.launch {
+            repo.removeMovieFromWatchlist(movieId, watchlistId)
+            getMoviesForWatchlist(watchlistId)
+        }
+    }
+
 }

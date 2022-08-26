@@ -22,7 +22,7 @@ interface WatchlistDao {
     @Query("SELECT * FROM watchlist WHERE id = :watchlistId")
     suspend fun getWatchlist(watchlistId: Int): Watchlist?
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addMovie(movieEntity: MovieEntity)
 
     @Query("SELECT * FROM table_movies WHERE id = :movieId")

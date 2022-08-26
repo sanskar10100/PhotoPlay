@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.sanskar.photoplay.data.Movie
+import dev.sanskar.photoplay.data.MovieWatchlistInclusion
 import dev.sanskar.photoplay.data.MoviesResponse
 import dev.sanskar.photoplay.data.Repository
 import dev.sanskar.photoplay.db.Watchlist
@@ -24,7 +25,7 @@ class HomeViewModel @Inject constructor(
 
     val showCreateWatchlistDialog by mutableStateOf(false)
     var showAddMovieToWatchlistDialog by mutableStateOf(false)
-    var movieWithWatchlistInclusionStatus: List<Pair<Watchlist, Boolean>> = emptyList()
+    var movieWithWatchlistInclusionStatus = MovieWatchlistInclusion()
 
     fun addWatchlist(title: String, description: String) {
         if (title.isNotEmpty()) viewModelScope.launch {
@@ -32,17 +33,20 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun getMovieWithWatchlistInclusionStatus(movieId: Int) {
+    fun getMovieWithWatchlistInclusionStatus(movie: Movie) {
         viewModelScope.launch {
             logcat { "Launching viewModelScope for getting movies with watchlist inclusions" }
-            movieWithWatchlistInclusionStatus = repo.getMovieWithWatchlistInclusionStatus(movieId)
+            movieWithWatchlistInclusionStatus = MovieWatchlistInclusion(
+                movie,
+                repo.getMovieWithWatchlistInclusionStatus(movie.id)
+            )
             logcat { "Received $movieWithWatchlistInclusionStatus" }
             showAddMovieToWatchlistDialog = true
         }
     }
 
-    fun updateWatchlistInclusionsForMovie(inclusionList: List<Int>, movie: Movie) {
-        viewModelScope.launch {
+    fun updateWatchlistInclusionsForMovie(inclusionList: List<Pair<Watchlist, Boolean>>, movie: Movie) {
+        if (inclusionList.isNotEmpty()) viewModelScope.launch {
             repo.updateWatchlistInclusionsForMovie(inclusionList, movie.id, movie.title, movie.poster_path, movie.backdrop_path)
         }
         showAddMovieToWatchlistDialog = false

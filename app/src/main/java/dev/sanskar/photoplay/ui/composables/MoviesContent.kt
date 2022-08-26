@@ -30,7 +30,7 @@ import dev.sanskar.photoplay.util.getDownloadUrl
 fun MoviesGrid(
     movies: List<Movie>,
     modifier: Modifier = Modifier,
-    onTap: (Int) -> Unit
+    onTap: (Movie) -> Unit
 ) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(128.dp),
@@ -46,7 +46,7 @@ fun MoviesGrid(
                 elevation = 3.dp,
                 shape = RoundedCornerShape(8.dp),
                 modifier = Modifier.animateItemPlacement()
-                    .clickWithRipple { onTap(movie.id) }
+                    .clickWithRipple { onTap(movie) }
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally

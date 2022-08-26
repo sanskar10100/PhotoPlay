@@ -64,6 +64,7 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import dagger.hilt.android.AndroidEntryPoint
 import dev.sanskar.photoplay.R
+import dev.sanskar.photoplay.ui.composables.AddMovieToWatchLists
 import dev.sanskar.photoplay.ui.composables.MoviesGrid
 import dev.sanskar.photoplay.ui.composables.ProgressBar
 import dev.sanskar.photoplay.ui.theme.PhotoPlayTheme
@@ -100,6 +101,15 @@ class HomeFragment : Fragment() {
     @Composable
     fun HomeContent(scaffoldState: ScaffoldState, modifier: Modifier = Modifier) {
         val state by viewModel.moviesResponseMovies.collectAsStateWithLifecycle()
+        if (viewModel.showAddMovieToWatchlistDialog) {
+            AddMovieToWatchLists(
+                movie = viewModel.movieWithWatchlistInclusionStatus.movie,
+                checklist = viewModel.movieWithWatchlistInclusionStatus.watchlistInclusionStatus,
+                onClick = {
+                    viewModel.updateWatchlistInclusionsForMovie(it, viewModel.movieWithWatchlistInclusionStatus.movie)
+                }
+            )
+        }
 
         when (val state = state) {
             is UiState.Loading -> {
