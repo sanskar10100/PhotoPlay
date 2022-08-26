@@ -16,11 +16,17 @@ interface WatchlistDao {
     @Query("SELECT * FROM watchlist")
     fun getAllWatchlists(): Flow<List<Watchlist>>
 
+    @Query("SELECT * FROM watchlist")
+    suspend fun getAllWatchlistsOneShot(): List<Watchlist>
+
     @Query("SELECT * FROM watchlist WHERE id = :watchlistId")
     suspend fun getWatchlist(watchlistId: Int): Watchlist?
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addMovie(movieEntity: MovieEntity)
+
+    @Query("SELECT * FROM table_movies WHERE id = :movieId")
+    suspend fun getMovieEntries(movieId: Int): List<MovieEntity>
 
     @Query("SELECT * FROM table_movies")
     suspend fun getAllMovies(): List<MovieEntity>
@@ -40,6 +46,6 @@ interface WatchlistDao {
     @Query("DELETE FROM table_movies WHERE watchlistId = :watchlistId")
     suspend fun deleteMovies(watchlistId: Int)
 
-    @Query("DELETE FROM table_movies WHERE id = :movieId")
-    suspend fun deleteMovie(movieId: Int)
+    @Query("DELETE FROM table_movies WHERE id = :movieId AND watchlistId = :watchlistId")
+    suspend fun deleteMovie(movieId: Int, watchlistId: Int)
 }

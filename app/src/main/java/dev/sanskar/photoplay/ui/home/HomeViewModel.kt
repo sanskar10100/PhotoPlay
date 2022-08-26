@@ -2,18 +2,19 @@ package dev.sanskar.photoplay.ui.home
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.sanskar.photoplay.data.Movie
 import dev.sanskar.photoplay.data.MoviesResponse
 import dev.sanskar.photoplay.data.Repository
-import dev.sanskar.photoplay.network.MoviesBackendService
+import dev.sanskar.photoplay.db.Watchlist
 import dev.sanskar.photoplay.util.UiState
-import dev.sanskar.photoplay.util.networkResult
 import javax.inject.Inject
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import logcat.logcat
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -22,7 +23,30 @@ class HomeViewModel @Inject constructor(
     val moviesResponseMovies = MutableStateFlow<UiState<MoviesResponse>>(UiState.Loading)
 
     val showCreateWatchlistDialog by mutableStateOf(false)
-    val showAddMovieToWatchlistDialog by mutableStateOf(false)
+    var showAddMovieToWatchlistDialog by mutableStateOf(false)
+    var movieWithWatchlistInclusionStatus: List<Pair<Watchlist, Boolean>> = emptyList()
+
+    fun addWatchlist(title: String, description: String) {
+        if (title.isNotEmpty()) viewModelScope.launch {
+            repo.addWatchlist(title, description)
+        }
+    }
+
+    fun getMovieWithWatchlistInclusionStatus(movieId: Int) {
+        viewModelScope.launch {
+            logcat { "Launching viewModelScope for getting movies with watchlist inclusions" }
+            movieWithWatchlistInclusionStatus = repo.getMovieWithWatchlistInclusionStatus(movieId)
+            logcat { "Received $movieWithWatchlistInclusionStatus" }
+            showAddMovieToWatchlistDialog = true
+        }
+    }
+
+    fun updateWatchlistInclusionsForMovie(inclusionList: List<Int>, movie: Movie) {
+        viewModelScope.launch {
+            repo.updateWatchlistInclusionsForMovie(inclusionList, movie.id, movie.title, movie.poster_path, movie.backdrop_path)
+        }
+        showAddMovieToWatchlistDialog = false
+    }
 
     init {
         getPopularMovies()

@@ -11,9 +11,9 @@ data class Watchlist(
     val createdOn: String,
 )
 
-@Entity(tableName = "table_movies")
+@Entity(tableName = "table_movies", primaryKeys = ["id", "watchlistId"])
 data class MovieEntity(
-    @PrimaryKey val id: Int,
+    val id: Int,
     val name: String,
     val backdropPath: String?,
     val posterPath: String?,

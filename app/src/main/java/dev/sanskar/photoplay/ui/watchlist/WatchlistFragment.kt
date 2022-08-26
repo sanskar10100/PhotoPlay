@@ -103,7 +103,7 @@ class WatchlistFragment : Fragment() {
                     ) {
                         WatchlistScreen(Modifier.padding(it))
                         if (showAddDialog) AddWatchlistDialog { title, description ->
-                            if (title.isNotEmpty()) viewModel.addWatchlist(title, description)
+                            viewModel.addWatchlist(title, description)
                             showAddDialog = false
                         }
                     }

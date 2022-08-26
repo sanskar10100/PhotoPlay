@@ -40,4 +40,29 @@ class Repository @Inject constructor(
     suspend fun getPopularMovies() = networkResult { api.getPopularMovies() }
 
     suspend fun searchMovie(query: String) = networkResult { api.getMoviesForQuery(query) }
+
+    suspend fun getMovieWithWatchlistInclusionStatus(movieId: Int): List<Pair<Watchlist, Boolean>> {
+        val movieEntries = db.getMovieEntries(movieId)
+        val watchlists = db.getAllWatchlistsOneShot()
+        val checkList = mutableListOf<Pair<Watchlist, Boolean>>()
+        watchlists.forEach { watchlist ->
+            if (movieEntries.any { it.id == watchlist.id }) {
+                checkList.add(Pair(watchlist, true))
+            } else {
+                checkList.add(Pair(watchlist, false))
+            }
+        }
+        return checkList
+    }
+
+    suspend fun updateWatchlistInclusionsForMovie(includeIn: List<Int>, id: Int, title: String, posterPath: String?, backdropPath: String?) {
+        val watchlists = db.getAllWatchlistsOneShot()
+        watchlists.forEach { watchlist ->
+            if (watchlist.id in includeIn) {
+                db.addMovie(MovieEntity(id, title, backdropPath, posterPath, watchlist.id))
+            } else {
+                db.deleteMovie(id, watchlist.id)
+            }
+        }
+    }
 }

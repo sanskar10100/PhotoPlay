@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentScope
@@ -46,6 +47,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.text.input.ImeAction
@@ -98,7 +100,6 @@ class HomeFragment : Fragment() {
     @Composable
     fun HomeContent(scaffoldState: ScaffoldState, modifier: Modifier = Modifier) {
         val state by viewModel.moviesResponseMovies.collectAsStateWithLifecycle()
-        if (viewModel.showCreateWatchlistDialog)
 
         when (val state = state) {
             is UiState.Loading -> {
@@ -114,7 +115,9 @@ class HomeFragment : Fragment() {
                 }
             }
             is UiState.Success -> {
-                MoviesGrid(movies = state.data.results, modifier)
+                MoviesGrid(movies = state.data.results, modifier) {
+                    viewModel.getMovieWithWatchlistInclusionStatus(it)
+                }
             }
         }
     }

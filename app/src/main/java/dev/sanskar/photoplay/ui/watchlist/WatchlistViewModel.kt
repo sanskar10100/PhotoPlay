@@ -25,12 +25,12 @@ class WatchlistViewModel @Inject constructor(
 
     private fun getWatchlists() {
         viewModelScope.launch {
-            repo.getWatchlists().collect { watchlists.value = it}
+            repo.getWatchlists().collect { watchlists.value = it }
         }
     }
 
     fun addWatchlist(title: String, description: String) {
-        viewModelScope.launch {
+        if (title.isNotEmpty()) viewModelScope.launch {
             repo.addWatchlist(title, description)
         }
     }

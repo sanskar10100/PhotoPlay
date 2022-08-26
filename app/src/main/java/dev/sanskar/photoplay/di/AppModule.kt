@@ -13,9 +13,7 @@ import dev.sanskar.photoplay.BuildConfig
 import dev.sanskar.photoplay.db.PhotoPlayDB
 import dev.sanskar.photoplay.network.MoviesBackendService
 import javax.inject.Singleton
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -65,7 +63,7 @@ object AppModule {
         context,
         PhotoPlayDB::class.java,
         "photoplay_db"
-    ).build()
+    ).fallbackToDestructiveMigration().build()
 
     @Singleton
     @Provides

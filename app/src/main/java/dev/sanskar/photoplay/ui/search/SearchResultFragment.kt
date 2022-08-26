@@ -57,7 +57,7 @@ class SearchResultFragment : Fragment() {
             is UiState.Success -> {
                 MoviesGrid(
                     movies = state.data.results
-                )
+                ) {}
             }
         }
     }
