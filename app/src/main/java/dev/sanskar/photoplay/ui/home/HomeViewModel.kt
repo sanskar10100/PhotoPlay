@@ -23,13 +23,14 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
     val moviesResponseMovies = MutableStateFlow<UiState<MoviesResponse>>(UiState.Loading)
 
-    val showCreateWatchlistDialog by mutableStateOf(false)
     var showAddMovieToWatchlistDialog by mutableStateOf(false)
     var movieWithWatchlistInclusionStatus = MovieWatchlistInclusion()
 
     fun addWatchlist(title: String, description: String) {
         if (title.isNotEmpty()) viewModelScope.launch {
+            showAddMovieToWatchlistDialog = false
             repo.addWatchlist(title, description)
+            getMovieWithWatchlistInclusionStatus(movieWithWatchlistInclusionStatus.movie)
         }
     }
 

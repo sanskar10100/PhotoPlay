@@ -87,7 +87,8 @@ class WatchlistDetailsFragment : Fragment() {
                 is UiState.Empty -> {
                     Column(
                         modifier = modifier.fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
                     ) {
                         LottieEmpty("Add some movies to get started!")
                         Spacer(Modifier.height(16.dp))

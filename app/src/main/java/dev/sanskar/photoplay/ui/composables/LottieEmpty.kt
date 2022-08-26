@@ -1,8 +1,11 @@
 package dev.sanskar.photoplay.ui.composables
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -21,7 +24,7 @@ fun LottieEmpty(text: String = "Add some content to get started!") {
     LottieAnimation(
         composition = composition,
         modifier = Modifier
-            .fillMaxSize(0.7f)
+            .size(256.dp)
     )
     Spacer(modifier = Modifier.height(16.dp))
     Text(

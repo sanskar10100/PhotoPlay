@@ -4,14 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.with
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,13 +26,11 @@ import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Theaters
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,8 +42,6 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -105,10 +98,13 @@ class HomeFragment : Fragment() {
             AddMovieToWatchLists(
                 movie = viewModel.movieWithWatchlistInclusionStatus.movie,
                 checklist = viewModel.movieWithWatchlistInclusionStatus.watchlistInclusionStatus,
-                onClick = {
-                    viewModel.updateWatchlistInclusionsForMovie(it, viewModel.movieWithWatchlistInclusionStatus.movie)
+                onWatchlistCreate = { title, description ->
+                    viewModel.addWatchlist(title, description)
                 }
-            )
+            ) {
+                viewModel.updateWatchlistInclusionsForMovie(it,
+                    viewModel.movieWithWatchlistInclusionStatus.movie)
+            }
         }
 
         when (val state = state) {
@@ -137,7 +133,8 @@ class HomeFragment : Fragment() {
     fun HomeAppBar() {
         var searchMode by remember { mutableStateOf(false) }
         val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.movies))
-        val progress by animateLottieCompositionAsState(composition, iterations = LottieConstants.IterateForever)
+        val progress by animateLottieCompositionAsState(composition,
+            iterations = LottieConstants.IterateForever)
         var tabIndex by remember { mutableStateOf(0) }
         BackHandler(searchMode) {
             searchMode = false
@@ -146,7 +143,8 @@ class HomeFragment : Fragment() {
         AnimatedContent(
             targetState = searchMode,
             transitionSpec = {
-                slideIntoContainer(AnimatedContentScope.SlideDirection.Up, animationSpec = tween(500)) with slideOutOfContainer(
+                slideIntoContainer(AnimatedContentScope.SlideDirection.Up,
+                    animationSpec = tween(500)) with slideOutOfContainer(
                     AnimatedContentScope.SlideDirection.Up, animationSpec = tween(500))
             },
             modifier = Modifier.fillMaxWidth(),
@@ -196,24 +194,24 @@ class HomeFragment : Fragment() {
                     Divider()
                     TabRow(selectedTabIndex = tabIndex) {
                         Tab(
-                          selected = tabIndex == 0,
-                          onClick = {
-                              tabIndex = 0
-                              viewModel.getPopularMovies()
-                          },
-                          text = {
-                              Text("Popular")
-                          }
+                            selected = tabIndex == 0,
+                            onClick = {
+                                tabIndex = 0
+                                viewModel.getPopularMovies()
+                            },
+                            text = {
+                                Text("Popular")
+                            }
                         )
                         Tab(
-                          selected = tabIndex == 1,
-                          onClick = {
-                              tabIndex = 1
-                              viewModel.getTopRatedMovies()
-                          },
-                          text = {
-                              Text("Top Rated")
-                          }
+                            selected = tabIndex == 1,
+                            onClick = {
+                                tabIndex = 1
+                                viewModel.getTopRatedMovies()
+                            },
+                            text = {
+                                Text("Top Rated")
+                            }
                         )
                     }
                 }

@@ -122,8 +122,9 @@ class WatchlistFragment : Fragment() {
                 is UiState.Error -> {}
                 is UiState.Empty -> {
                     Column(
+                        modifier = modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = modifier.fillMaxSize()
+                        verticalArrangement = Arrangement.Center
                     ) {
                         LottieEmpty("Create a watchlist to get started!")
                     }
