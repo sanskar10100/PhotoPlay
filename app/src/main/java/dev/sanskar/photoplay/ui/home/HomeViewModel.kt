@@ -13,7 +13,6 @@ import dev.sanskar.photoplay.data.Repository
 import dev.sanskar.photoplay.db.Watchlist
 import dev.sanskar.photoplay.util.UiState
 import javax.inject.Inject
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import logcat.logcat
 
@@ -21,7 +20,8 @@ import logcat.logcat
 class HomeViewModel @Inject constructor(
     private val repo: Repository
 ) : ViewModel() {
-    val moviesResponseMovies = MutableStateFlow<UiState<MoviesResponse>>(UiState.Loading)
+    var popularMoviesResponse by mutableStateOf<UiState<MoviesResponse>>(UiState.Loading)
+    var topRatedMoviesResponse by mutableStateOf<UiState<MoviesResponse>>(UiState.Loading)
 
     var showAddMovieToWatchlistDialog by mutableStateOf(false)
     var movieWithWatchlistInclusionStatus = MovieWatchlistInclusion()
@@ -58,16 +58,16 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getPopularMovies() {
-        moviesResponseMovies.value = UiState.Loading
+        popularMoviesResponse = UiState.Loading
         viewModelScope.launch {
-            moviesResponseMovies.value = repo.getPopularMovies()
+            popularMoviesResponse = repo.getPopularMovies()
         }
     }
 
     fun getTopRatedMovies() {
-        moviesResponseMovies.value = UiState.Loading
+        topRatedMoviesResponse = UiState.Loading
         viewModelScope.launch {
-            moviesResponseMovies.value = repo.getTopRatedMovies()
+            topRatedMoviesResponse = repo.getTopRatedMovies()
         }
     }
 }
