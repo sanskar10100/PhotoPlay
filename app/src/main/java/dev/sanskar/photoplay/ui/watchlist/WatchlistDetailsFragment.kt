@@ -38,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -135,6 +136,7 @@ class WatchlistDetailsFragment : Fragment() {
                                             contentDescription = "Remove from watchlist",
                                             modifier = Modifier
                                                 .align(Alignment.TopEnd)
+                                                .padding(4.dp)
                                                 .clickWithRipple {
                                                     viewModel.removeMovieFromWatchlist(movie.id, navArgs.watchlistId)
                                                 }
@@ -161,13 +163,14 @@ class WatchlistDetailsFragment : Fragment() {
             ) {
                 Text(
                     text = watchlist.name,
-                    style = MaterialTheme.typography.h1.copy(fontFamily = MontserratFontFamily),
+                    style = MaterialTheme.typography.h2,
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                 )
                 Text(
                     text = watchlist.description,
                     style = MaterialTheme.typography.body1,
-                    modifier = Modifier.padding(horizontal = 8.dp)
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    textAlign = TextAlign.Center
                 )
                 Text(
                     text = "Created on: ${watchlist.createdOn}",
