@@ -62,6 +62,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import dagger.hilt.android.AndroidEntryPoint
 import dev.sanskar.photoplay.R
 import dev.sanskar.photoplay.db.Watchlist
+import dev.sanskar.photoplay.ui.composables.AddWatchlistDialog
 import dev.sanskar.photoplay.ui.composables.LottieEmpty
 import dev.sanskar.photoplay.ui.theme.PhotoPlayTheme
 import dev.sanskar.photoplay.util.UiState
@@ -101,72 +102,10 @@ class WatchlistFragment : Fragment() {
                         }
                     ) {
                         WatchlistScreen(Modifier.padding(it))
-                        if (showAddDialog) AddWatchlistDialog { showAddDialog = false }
-                    }
-                }
-            }
-        }
-    }
-
-    @OptIn(ExperimentalComposeUiApi::class)
-    @Composable
-    fun AddWatchlistDialog(modifier: Modifier = Modifier, onDismiss: () -> Unit) {
-        Dialog(
-            onDismissRequest = { onDismiss() },
-            properties = DialogProperties(
-                dismissOnBackPress = true,
-                dismissOnClickOutside = true,
-                usePlatformDefaultWidth = false
-            ),
-        ) {
-            Surface(
-                elevation = 3.dp,
-                shape = RoundedCornerShape(16.dp),
-                modifier = modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.4f)
-                    .padding(16.dp)
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp)
-                ) {
-                    var title by remember { mutableStateOf("") }
-                    var description by remember { mutableStateOf("") }
-                    OutlinedTextField(
-                        value = title,
-                        onValueChange = { title = it },
-                        maxLines = 1,
-                        label = { Text("Watchlist Title") },
-                        leadingIcon = { Icon(imageVector = Icons.Filled.Title, contentDescription = null) },
-                        shape = RoundedCornerShape(8.dp),
-                        isError = title.isEmpty(),
-                    )
-                    Spacer(Modifier.height(16.dp))
-                    OutlinedTextField(
-                        value = description,
-                        onValueChange = { description = it },
-                        maxLines = 5,
-                        label = { Text("Watchlist Description") },
-                        leadingIcon = { Icon(imageVector = Icons.Filled.Description, contentDescription = null) },
-                        shape = RoundedCornerShape(8.dp),
-                        isError = description.isEmpty(),
-                    )
-                    Spacer(Modifier.height(16.dp))
-                    Button(
-                        onClick = {
-                            if (title.isNotEmpty() and description.isNotEmpty()) {
-                                viewModel.addWatchlist(title, description)
-                                onDismiss()
-                            }
+                        if (showAddDialog) AddWatchlistDialog { title, description ->
+                            if (title.isNotEmpty()) viewModel.addWatchlist(title, description)
+                            showAddDialog = false
                         }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Add,
-                            contentDescription = null
-                        )
-                        Text("Add")
                     }
                 }
             }
