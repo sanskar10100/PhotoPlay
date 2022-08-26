@@ -1,6 +1,8 @@
 package dev.sanskar.photoplay.ui.composables
 
 import android.app.Dialog
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,6 +25,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -39,6 +42,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -155,23 +160,37 @@ fun AddMovieToWatchLists(
             ) {
                 Card(
                     shape = RoundedCornerShape(8.dp),
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp)
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp, vertical = 16.dp),
+                    elevation = 5.dp,
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
+                    Box(
+                        modifier = Modifier
+                            .background(brush = Brush.horizontalGradient(listOf(
+                                Color(0xFF4A148C),
+                                Color(0xFF1A237E),
+                                Color(0xFF004D40),
+                                Color(0xFF01579B),
+                                Color(0xFFBF360C)
+                            )))
                     ) {
-                        AsyncImage(
-                            model = movie.poster_path?.getDownloadUrl() ?: movie.backdrop_path?.getDownloadUrl() ?:"",
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(128.dp),
-                            contentScale = ContentScale.Crop
-                        )
-                        Text(
-                            text = movie.title,
-                            style = MaterialTheme.typography.h2,
-                            modifier = Modifier.padding(16.dp)
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            AsyncImage(
+                                model = movie.poster_path?.getDownloadUrl()
+                                    ?: movie.backdrop_path?.getDownloadUrl() ?: "",
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(128.dp),
+                                contentScale = ContentScale.Crop
+                            )
+                            Text(
+                                text = movie.title,
+                                style = MaterialTheme.typography.h2,
+                                modifier = Modifier.padding(16.dp)
+                            )
+                        }
                     }
                 }
                 Spacer(Modifier.height(8.dp))

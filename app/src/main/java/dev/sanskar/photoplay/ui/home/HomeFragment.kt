@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.with
@@ -114,6 +115,7 @@ class HomeFragment : Fragment() {
                     viewModel.movieWithWatchlistInclusionStatus.movie)
             }
         }
+        val scope = rememberCoroutineScope()
         HorizontalPager(
             count = 2,
             state = pagerState,
@@ -138,6 +140,11 @@ class HomeFragment : Fragment() {
                 }
                 1 -> {
                     LaunchedEffect(Unit) { viewModel.getTopRatedMovies() }
+                    BackHandler(pagerState.currentPage == 1) {
+                        scope.launch {
+                            pagerState.animateScrollToPage(0)
+                        }
+                    }
                     when (val state = viewModel.topRatedMoviesResponse) {
                         is UiState.Loading -> {
                             ProgressBar(true)
