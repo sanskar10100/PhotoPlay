@@ -98,6 +98,8 @@ class HomeFragment : Fragment() {
     @Composable
     fun HomeContent(scaffoldState: ScaffoldState, modifier: Modifier = Modifier) {
         val state by viewModel.moviesResponseMovies.collectAsStateWithLifecycle()
+        if (viewModel.showCreateWatchlistDialog)
+
         when (val state = state) {
             is UiState.Loading -> {
                 ProgressBar(true)
