@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -96,7 +97,9 @@ class WatchlistDetailsFragment : Fragment() {
                     }
                 }
                 is UiState.Success -> {
-                    LazyColumn {
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
                         item {
                             WatchlistHeader(watchlist = state.data.first)
                         }
@@ -112,7 +115,7 @@ class WatchlistDetailsFragment : Fragment() {
                                         model = movie.posterPath?.getDownloadUrl() ?: movie.backdropPath?.getDownloadUrl() ?:"",
                                         contentDescription = null,
                                         modifier = Modifier
-                                            .size(128.dp),
+                                            .size(96.dp),
                                         contentScale = ContentScale.Crop
                                     )
                                     Box(
@@ -120,8 +123,9 @@ class WatchlistDetailsFragment : Fragment() {
                                     ) {
                                         Text(
                                             text = movie.name,
-                                            style = MaterialTheme.typography.h2,
+                                            style = MaterialTheme.typography.h3,
                                             modifier = Modifier.padding(16.dp)
+                                                .align(Alignment.Center)
                                         )
                                         Icon(
                                             imageVector = Icons.Filled.Cancel,
