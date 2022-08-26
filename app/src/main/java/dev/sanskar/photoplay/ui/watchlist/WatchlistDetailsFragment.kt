@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -111,6 +112,7 @@ class WatchlistDetailsFragment : Fragment() {
                             ) {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.height(96.dp)
                                 ) {
                                     AsyncImage(
                                         model = movie.posterPath?.getDownloadUrl() ?: movie.backdropPath?.getDownloadUrl() ?:"",
@@ -132,7 +134,7 @@ class WatchlistDetailsFragment : Fragment() {
                                             imageVector = Icons.Filled.Cancel,
                                             contentDescription = "Remove from watchlist",
                                             modifier = Modifier
-                                                .align(Alignment.BottomEnd)
+                                                .align(Alignment.TopEnd)
                                                 .clickWithRipple {
                                                     viewModel.removeMovieFromWatchlist(movie.id, navArgs.watchlistId)
                                                 }
