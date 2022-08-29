@@ -134,8 +134,9 @@ class WatchlistDetailsFragment : Fragment() {
                                         Text(
                                             text = movie.name,
                                             style = MaterialTheme.typography.h3,
-                                            modifier = Modifier.padding(16.dp)
-                                                .align(Alignment.Center)
+                                            modifier = Modifier.padding(8.dp)
+                                                .align(Alignment.Center),
+                                            textAlign = TextAlign.Center
                                         )
                                         Icon(
                                             imageVector = Icons.Filled.Cancel,
@@ -172,7 +173,7 @@ class WatchlistDetailsFragment : Fragment() {
                     style = MaterialTheme.typography.h2,
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                 )
-                Text(
+                if (watchlist.description.isNotEmpty()) Text(
                     text = watchlist.description,
                     style = MaterialTheme.typography.body1,
                     modifier = Modifier.padding(horizontal = 8.dp),
