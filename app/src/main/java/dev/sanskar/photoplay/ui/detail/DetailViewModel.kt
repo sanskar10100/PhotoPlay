@@ -3,6 +3,7 @@ package dev.sanskar.photoplay.ui.detail
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.input.key.Key.Companion.U
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,6 +11,7 @@ import dev.sanskar.photoplay.data.Movie
 import dev.sanskar.photoplay.data.MovieCast
 import dev.sanskar.photoplay.data.MovieDetails
 import dev.sanskar.photoplay.data.MovieWatchlistInclusion
+import dev.sanskar.photoplay.data.MoviesResponse
 import dev.sanskar.photoplay.data.Repository
 import dev.sanskar.photoplay.db.Watchlist
 import dev.sanskar.photoplay.util.UiState
@@ -25,6 +27,7 @@ class DetailViewModel @Inject constructor(
 
     var movieDetails by mutableStateOf<UiState<MovieDetails>>(UiState.Loading)
     var movieCast by mutableStateOf<UiState<MovieCast>>(UiState.Loading)
+    var movieRecommendations by mutableStateOf<UiState<MoviesResponse>>(UiState.Loading)
 
     var showAddMovieToWatchlistDialog by mutableStateOf(false)
     var movieWithWatchlistInclusionStatus = MovieWatchlistInclusion()
@@ -60,6 +63,7 @@ class DetailViewModel @Inject constructor(
         viewModelScope.launch {
             movieDetails = repo.getMovieDetails(movieId)
             movieCast = repo.getMovieCast(movieId)
+            movieRecommendations = repo.getMovieRecommendations(movieId)
         }
     }
 }

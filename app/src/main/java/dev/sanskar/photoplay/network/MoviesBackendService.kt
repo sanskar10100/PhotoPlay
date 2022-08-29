@@ -35,4 +35,9 @@ interface MoviesBackendService {
     suspend fun getMovieCast(
         @Path("movie_id") movieId: Int
     ): Response<MovieCast>
+
+    @GET("movie/{movie_id}/recommendations")
+    suspend fun getMovieRecommendations(
+        @Path("movie_id") movieId: Int,
+    ): Response<MoviesResponse>
 }

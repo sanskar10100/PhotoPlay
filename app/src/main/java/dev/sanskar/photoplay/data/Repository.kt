@@ -47,6 +47,8 @@ class Repository @Inject constructor(
 
     suspend fun getMovieCast(movieId: Int) = networkResult { api.getMovieCast(movieId) }
 
+    suspend fun getMovieRecommendations(movieId: Int) = networkResult { api.getMovieRecommendations(movieId) }
+
     suspend fun getMovieWithWatchlistInclusionStatus(movieId: Int): List<Pair<Watchlist, Boolean>> {
         val movieEntries = db.getMovieEntries(movieId)
         val watchlists = db.getAllWatchlistsOneShot()

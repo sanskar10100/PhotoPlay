@@ -109,7 +109,13 @@ class WatchlistDetailsFragment : Fragment() {
                         items(state.data.second) { movie ->
                             Card(
                                 shape = RoundedCornerShape(8.dp),
-                                modifier = Modifier.padding(horizontal = 8.dp)
+                                modifier = Modifier
+                                    .padding(horizontal = 8.dp)
+                                    .clickWithRipple {
+                                        findNavController().navigate(
+                                            WatchlistDetailsFragmentDirections.actionWatchlistDetailsFragmentToDetailFragment(movie.id)
+                                        )
+                                    }
                             ) {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,

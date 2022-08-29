@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,8 +23,10 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -33,6 +37,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.OpenInNew
@@ -53,7 +58,10 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.min
+import androidx.core.content.ContextCompat.startActivity
 import androidx.core.net.toUri
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -69,6 +77,7 @@ import dev.sanskar.photoplay.data.MovieDetails
 import dev.sanskar.photoplay.data.asMovie
 import dev.sanskar.photoplay.ui.composables.AddMovieToWatchLists
 import dev.sanskar.photoplay.ui.composables.ErrorDialog
+import dev.sanskar.photoplay.ui.composables.MoviesGrid
 import dev.sanskar.photoplay.ui.composables.ProgressBar
 import dev.sanskar.photoplay.ui.theme.MontserratFontFamily
 import dev.sanskar.photoplay.ui.theme.PhotoPlayTheme
@@ -162,7 +171,7 @@ class DetailFragment : Fragment() {
                             }
                         }
                         AddToWatchlistButton(state.data)
-                        if (viewModel.movieCast is UiState.Success) {
+                        AnimatedVisibility(viewModel.movieCast is UiState.Success) {
                             MovieCastRow((viewModel.movieCast as UiState.Success).data.cast.take(20))
                         }
                         Text(
@@ -176,6 +185,60 @@ class DetailFragment : Fragment() {
                             textAlign = TextAlign.Justify,
                             modifier = Modifier.padding(4.dp),
                             style = MaterialTheme.typography.body2.copy(fontFamily = MontserratFontFamily)
+                        )
+                        Text(
+                            text = "Similar",
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.h6.copy(fontFamily = MontserratFontFamily),
+                            modifier = Modifier
+                                .align(Alignment.Start)
+                                .padding(8.dp),
+                            fontWeight = FontWeight.Bold
+                        )
+                        AnimatedVisibility(viewModel.movieRecommendations is UiState.Success) {
+                            RecommendedMoviesRow(movies = (viewModel.movieRecommendations as UiState.Success).data.results)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @OptIn(ExperimentalFoundationApi::class)
+    @Composable
+    fun RecommendedMoviesRow(movies: List<Movie>, modifier: Modifier = Modifier) {
+        LazyRow(
+            contentPadding = PaddingValues(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            items(movies, key = {
+                it.id
+            }) { movie ->
+                Surface(
+                    elevation = 3.dp,
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier
+                        .animateItemPlacement()
+                        .clickWithRipple {
+                            findNavController().navigate(DetailFragmentDirections.actionDetailFragmentSelf(
+                                movie.id))
+                        }
+                ) {
+                    Column(
+                        horizontalAlignment = CenterHorizontally
+                    ) {
+                        AsyncImage(
+                            model = movie.poster_path?.getDownloadUrl() ?: movie.backdrop_path?.getDownloadUrl() ?: "",
+                            contentDescription = null,
+                            contentScale = ContentScale.FillBounds,
+                            modifier = Modifier.clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)),
+                        )
+                        Text(
+                            text = movie.title,
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.h3,
+                            modifier = Modifier.padding(8.dp),
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                 }
