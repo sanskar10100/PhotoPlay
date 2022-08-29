@@ -64,7 +64,7 @@ fun AddWatchlistDialog(
     onDone: (String, String) -> Unit,
 ) {
     Dialog(
-        onDismissRequest = { onDone("", "") },
+        onDismissRequest = { onDone(initialTitle, initialDescription) },
         properties = DialogProperties(
             dismissOnBackPress = true,
             dismissOnClickOutside = true,
