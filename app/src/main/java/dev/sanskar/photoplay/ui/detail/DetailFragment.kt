@@ -19,16 +19,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
+import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material.icons.filled.Theaters
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,6 +44,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
@@ -56,6 +62,7 @@ import dev.sanskar.photoplay.data.asMovie
 import dev.sanskar.photoplay.ui.composables.AddMovieToWatchLists
 import dev.sanskar.photoplay.ui.composables.ErrorDialog
 import dev.sanskar.photoplay.ui.composables.ProgressBar
+import dev.sanskar.photoplay.ui.theme.MontserratFontFamily
 import dev.sanskar.photoplay.ui.theme.PhotoPlayTheme
 import dev.sanskar.photoplay.util.UiState
 import dev.sanskar.photoplay.util.clickWithRipple
@@ -110,7 +117,9 @@ class DetailFragment : Fragment() {
                     }
                 }
                 is UiState.Success -> {
-                    Column {
+                    Column(
+                        horizontalAlignment = CenterHorizontally
+                    ) {
                         AsyncImage(
                             model = state.data.backdrop_path?.getDownloadUrl() ?: state.data.poster_path?.getDownloadUrl() ?: "",
                             contentDescription = "Movie Poster",
@@ -121,14 +130,39 @@ class DetailFragment : Fragment() {
                                 .clip(RoundedCornerShape(16.dp)),
                             contentScale = ContentScale.Crop
                         )
-                        Spacer(Modifier.height(16.dp))
                         Text(
                             text = state.data.title,
                             style = MaterialTheme.typography.h2,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.align(CenterHorizontally)
                         )
+                        Spacer(Modifier.height(8.dp))
+                        LazyRow {
+                            items(state.data.genres) { genre ->
+                                Text(
+                                    text = genre.name,
+                                    style = MaterialTheme.typography.subtitle2.copy(fontFamily = MontserratFontFamily)
+                                )
+                                if (genre != state.data.genres.last()) {
+                                    Text(
+                                        text = ", ",
+                                        style = MaterialTheme.typography.subtitle2.copy(fontFamily = MontserratFontFamily)
+                                    )
+                                }
+                            }
+                        }
                         AddToWatchlistButton(state.data)
+                        Text(
+                            text = state.data.tagline,
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.h6.copy(fontFamily = MontserratFontFamily),
+                            modifier = Modifier.padding(4.dp),
+                        )
+                        Text(
+                            text = state.data.overview,
+                            textAlign = TextAlign.Justify,
+                            modifier = Modifier.padding(4.dp)
+                        )
                     }
                 }
             }
@@ -171,7 +205,10 @@ class DetailFragment : Fragment() {
                 Column(
                     Modifier
                         .weight(1f)
-                        .clickWithRipple { startActivity(Intent(Intent.ACTION_VIEW, "https://imdb.com/title/${movie.imdb_id}".toUri())) }
+                        .clickWithRipple {
+                            startActivity(Intent(Intent.ACTION_VIEW,
+                                "https://imdb.com/title/${movie.imdb_id}".toUri()))
+                        }
                         .padding(vertical = 16.dp),
                     horizontalAlignment = CenterHorizontally
                 ) {
