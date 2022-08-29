@@ -1,5 +1,6 @@
 package dev.sanskar.photoplay.ui.detail
 
+import android.content.Intent
 import android.graphics.Paint
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -25,6 +26,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material.icons.filled.Theaters
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -40,6 +42,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -48,6 +51,7 @@ import androidx.navigation.fragment.navArgs
 import coil.compose.AsyncImage
 import dagger.hilt.android.AndroidEntryPoint
 import dev.sanskar.photoplay.data.Movie
+import dev.sanskar.photoplay.data.MovieDetails
 import dev.sanskar.photoplay.data.asMovie
 import dev.sanskar.photoplay.ui.composables.AddMovieToWatchLists
 import dev.sanskar.photoplay.ui.composables.ErrorDialog
@@ -124,7 +128,7 @@ class DetailFragment : Fragment() {
                             textAlign = TextAlign.Center,
                             modifier = Modifier.align(CenterHorizontally)
                         )
-                        AddToWatchlistButton(state.data.asMovie())
+                        AddToWatchlistButton(state.data)
                     }
                 }
             }
@@ -132,34 +136,57 @@ class DetailFragment : Fragment() {
     }
 
     @Composable
-    fun AddToWatchlistButton(movie: Movie, modifier: Modifier = Modifier) {
+    fun AddToWatchlistButton(movie: MovieDetails, modifier: Modifier = Modifier) {
         Column(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp)
-                .clickWithRipple {
-                    viewModel.getMovieWithWatchlistInclusionStatus(movie)
-                }
         ) {
             Divider()
             Row(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp),
+                modifier = Modifier
+                    .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
             ) {
-                Icon(
-                    imageVector = Icons.Default.Theaters,
-                    contentDescription = null,
-                    tint = MaterialTheme.colors.primaryVariant
-                )
-                Spacer(Modifier.width(4.dp))
-                Text(
-                    text = "Add To Watchlist",
-                    style = MaterialTheme.typography.h3,
-                    color = MaterialTheme.colors.primaryVariant
-                )
+                Column(
+                    Modifier
+                        .weight(1f)
+                        .clickWithRipple { viewModel.getMovieWithWatchlistInclusionStatus(movie.asMovie()) }
+                        .padding(vertical = 16.dp),
+                    horizontalAlignment = CenterHorizontally
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Theaters,
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.primaryVariant
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = "Add To Watchlist",
+                        style = MaterialTheme.typography.h3,
+                        color = MaterialTheme.colors.primaryVariant
+                    )
+                }
+
+                Column(
+                    Modifier
+                        .weight(1f)
+                        .clickWithRipple { startActivity(Intent(Intent.ACTION_VIEW, "https://imdb.com/title/${movie.imdb_id}".toUri())) }
+                        .padding(vertical = 16.dp),
+                    horizontalAlignment = CenterHorizontally
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.OpenInNew,
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.primaryVariant
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = "View on IMDB",
+                        style = MaterialTheme.typography.h3,
+                        color = MaterialTheme.colors.primaryVariant
+                    )
+                }
             }
             Divider()
         }
