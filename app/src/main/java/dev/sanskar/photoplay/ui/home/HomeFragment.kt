@@ -103,18 +103,6 @@ class HomeFragment : Fragment() {
     @Composable
     fun HomeContent(scaffoldState: ScaffoldState, pagerState: PagerState, modifier: Modifier = Modifier) {
         logcat { "Home Content Recomposed" }
-        if (viewModel.showAddMovieToWatchlistDialog) {
-            AddMovieToWatchLists(
-                movie = viewModel.movieWithWatchlistInclusionStatus.movie,
-                checklist = viewModel.movieWithWatchlistInclusionStatus.watchlistInclusionStatus,
-                onWatchlistCreate = { title, description ->
-                    viewModel.addWatchlist(title, description)
-                }
-            ) {
-                viewModel.updateWatchlistInclusionsForMovie(it,
-                    viewModel.movieWithWatchlistInclusionStatus.movie)
-            }
-        }
         val scope = rememberCoroutineScope()
         HorizontalPager(
             count = 2,

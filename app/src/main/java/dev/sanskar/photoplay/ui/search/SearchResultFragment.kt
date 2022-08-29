@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import dev.sanskar.photoplay.ui.composables.MoviesGrid
@@ -57,7 +58,11 @@ class SearchResultFragment : Fragment() {
             is UiState.Success -> {
                 MoviesGrid(
                     movies = state.data.results
-                ) {}
+                ) {
+                    SearchResultFragmentDirections.actionSearchResultFragmentToDetailFragment(it.id).let {
+                        findNavController().navigate(it)
+                    }
+                }
             }
         }
     }

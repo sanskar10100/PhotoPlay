@@ -23,36 +23,6 @@ class HomeViewModel @Inject constructor(
     var popularMoviesResponse by mutableStateOf<UiState<MoviesResponse>>(UiState.Loading)
     var topRatedMoviesResponse by mutableStateOf<UiState<MoviesResponse>>(UiState.Loading)
 
-    var showAddMovieToWatchlistDialog by mutableStateOf(false)
-    var movieWithWatchlistInclusionStatus = MovieWatchlistInclusion()
-
-    fun addWatchlist(title: String, description: String) {
-        if (title.isNotEmpty()) viewModelScope.launch {
-            showAddMovieToWatchlistDialog = false
-            repo.addWatchlist(title, description)
-            getMovieWithWatchlistInclusionStatus(movieWithWatchlistInclusionStatus.movie)
-        }
-    }
-
-    fun getMovieWithWatchlistInclusionStatus(movie: Movie) {
-        viewModelScope.launch {
-            logcat { "Launching viewModelScope for getting movies with watchlist inclusions" }
-            movieWithWatchlistInclusionStatus = MovieWatchlistInclusion(
-                movie,
-                repo.getMovieWithWatchlistInclusionStatus(movie.id)
-            )
-            logcat { "Received $movieWithWatchlistInclusionStatus" }
-            showAddMovieToWatchlistDialog = true
-        }
-    }
-
-    fun updateWatchlistInclusionsForMovie(inclusionList: List<Pair<Watchlist, Boolean>>, movie: Movie) {
-        if (inclusionList.isNotEmpty()) viewModelScope.launch {
-            repo.updateWatchlistInclusionsForMovie(inclusionList, movie.id, movie.title, movie.poster_path, movie.backdrop_path)
-        }
-        showAddMovieToWatchlistDialog = false
-    }
-
     init {
         getPopularMovies()
     }
