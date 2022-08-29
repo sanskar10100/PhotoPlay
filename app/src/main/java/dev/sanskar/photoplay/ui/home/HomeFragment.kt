@@ -133,7 +133,9 @@ class HomeFragment : Fragment() {
                         }
                         is UiState.Success -> {
                             MoviesGrid(movies = state.data.results) {
-                                viewModel.getMovieWithWatchlistInclusionStatus(it)
+                                HomeFragmentDirections.actionHomeFragmentToDetailFragment(it.id).let {
+                                    findNavController().navigate(it)
+                                }
                             }
                         }
                     }
@@ -155,7 +157,9 @@ class HomeFragment : Fragment() {
                         }
                         is UiState.Success -> {
                             MoviesGrid(movies = state.data.results) {
-                                viewModel.getMovieWithWatchlistInclusionStatus(it)
+                                HomeFragmentDirections.actionHomeFragmentToDetailFragment(it.id).let {
+                                    findNavController().navigate(it)
+                                }
                             }
                         }
                     }

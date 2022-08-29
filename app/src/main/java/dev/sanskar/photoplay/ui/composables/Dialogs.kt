@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.Checkbox
@@ -264,4 +265,24 @@ fun AddMovieToWatchLists(
             }
         }
     }
+}
+
+@Composable
+fun ErrorDialog(
+    message: String,
+    modifier: Modifier = Modifier,
+    title: String = "There was an error",
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = { onDismiss() },
+        confirmButton = {
+            Button(onClick = onDismiss) {
+                Text(text = "Okay")
+            }
+        },
+        title = { Text(text = title) },
+        text = { Text(text = message) },
+        modifier = modifier
+    )
 }

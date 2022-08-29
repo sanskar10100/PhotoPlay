@@ -1,8 +1,10 @@
 package dev.sanskar.photoplay.network
 
+import dev.sanskar.photoplay.data.MovieDetails
 import dev.sanskar.photoplay.data.MoviesResponse
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MoviesBackendService {
@@ -22,4 +24,9 @@ interface MoviesBackendService {
         @Query("query") query: String,
         @Query("page") page: Int = 1,
     ): Response<MoviesResponse>
+
+    @GET("movie/{movie_id}")
+    suspend fun getMovieDetails(
+        @Path("movie_id") movieId: Int
+    ): Response<MovieDetails>
 }
