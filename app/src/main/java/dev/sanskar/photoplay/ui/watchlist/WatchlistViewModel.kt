@@ -48,4 +48,16 @@ class WatchlistViewModel @Inject constructor(
         }
     }
 
+    fun deleteWatchlist(id: Int) {
+        viewModelScope.launch {
+            repo.deleteWatchlist(id)
+        }
+    }
+
+    fun updateWatchlist(watchlist: Watchlist, title: String, description: String) {
+        viewModelScope.launch {
+            repo.updateWatchlist(watchlist, title, description)
+        }
+    }
+
 }

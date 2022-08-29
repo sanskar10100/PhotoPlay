@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -18,6 +19,9 @@ interface WatchlistDao {
 
     @Query("SELECT * FROM watchlist")
     suspend fun getAllWatchlistsOneShot(): List<Watchlist>
+
+    @Update
+    suspend fun updateWatchlist(watchlist: Watchlist)
 
     @Query("SELECT * FROM watchlist WHERE id = :watchlistId")
     suspend fun getWatchlist(watchlistId: Int): Watchlist?

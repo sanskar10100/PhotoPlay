@@ -57,7 +57,12 @@ import dev.sanskar.photoplay.util.getDownloadUrl
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun AddWatchlistDialog(modifier: Modifier = Modifier, onDone: (String, String) -> Unit) {
+fun AddWatchlistDialog(
+    modifier: Modifier = Modifier,
+    initialTitle: String = "",
+    initialDescription: String = "",
+    onDone: (String, String) -> Unit,
+) {
     Dialog(
         onDismissRequest = { onDone("", "") },
         properties = DialogProperties(
@@ -79,39 +84,45 @@ fun AddWatchlistDialog(modifier: Modifier = Modifier, onDone: (String, String) -
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp)
             ) {
-                var title by remember { mutableStateOf("") }
-                var description by remember { mutableStateOf("") }
+                var titleState by remember { mutableStateOf(initialTitle) }
+                var descriptionState by remember { mutableStateOf(initialDescription) }
                 OutlinedTextField(
-                    value = title,
-                    onValueChange = { title = it },
+                    value = titleState,
+                    onValueChange = { titleState = it },
                     maxLines = 1,
                     label = { Text("Watchlist Title") },
-                    leadingIcon = { Icon(imageVector = Icons.Filled.Title, contentDescription = null) },
+                    leadingIcon = {
+                        Icon(imageVector = Icons.Filled.Title,
+                            contentDescription = null)
+                    },
                     shape = RoundedCornerShape(8.dp),
-                    isError = title.isEmpty(),
+                    isError = titleState.isEmpty(),
                 )
                 Spacer(Modifier.height(16.dp))
                 OutlinedTextField(
-                    value = description,
-                    onValueChange = { description = it },
+                    value = descriptionState,
+                    onValueChange = { descriptionState = it },
                     maxLines = 5,
                     label = { Text("Watchlist Description") },
-                    leadingIcon = { Icon(imageVector = Icons.Filled.Description, contentDescription = null) },
+                    leadingIcon = {
+                        Icon(imageVector = Icons.Filled.Description,
+                            contentDescription = null)
+                    },
                     shape = RoundedCornerShape(8.dp),
                 )
                 Spacer(Modifier.height(16.dp))
                 Button(
                     onClick = {
-                        if (title.isNotEmpty()) {
-                            onDone(title, description)
+                        if (titleState.isNotEmpty()) {
+                            onDone(titleState, descriptionState)
                         }
                     }
                 ) {
                     Icon(
-                        imageVector = Icons.Filled.Add,
+                        imageVector = if (initialTitle.isNotEmpty()) Icons.Filled.Done else Icons.Filled.Add,
                         contentDescription = null
                     )
-                    Text("Add")
+                    Text(if (initialTitle.isNotEmpty()) "Save" else "Add")
                 }
             }
         }
@@ -249,7 +260,7 @@ fun AddMovieToWatchLists(
                     }
 
                     Button(
-                        onClick = { onClick(watchlistStates.toList())},
+                        onClick = { onClick(watchlistStates.toList()) },
                         modifier = Modifier.padding(bottom = 16.dp)
                     ) {
                         Icon(
@@ -268,11 +279,31 @@ fun AddMovieToWatchLists(
 }
 
 @Composable
+fun ConfirmActionDialog(
+    message: String,
+    modifier: Modifier = Modifier,
+    title: String = "Please confirm the action",
+    onConfirm: (Boolean) -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = { onConfirm(false) },
+        confirmButton = {
+            Button(onClick = { onConfirm(true) }) {
+                Text(text = "Confirm")
+            }
+        },
+        title = { Text(text = title) },
+        text = { Text(text = message) },
+        modifier = modifier
+    )
+}
+
+@Composable
 fun ErrorDialog(
     message: String,
     modifier: Modifier = Modifier,
     title: String = "There was an error",
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
 ) {
     AlertDialog(
         onDismissRequest = { onDismiss() },

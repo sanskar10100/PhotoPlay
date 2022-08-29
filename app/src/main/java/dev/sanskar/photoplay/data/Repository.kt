@@ -82,4 +82,8 @@ class Repository @Inject constructor(
     suspend fun removeMovieFromWatchlist(movieId: Int, watchlistId: Int) =
         db.deleteMovie(movieId, watchlistId)
 
+    suspend fun deleteWatchlist(id: Int) = db.deleteWatchlist(id)
+
+    suspend fun updateWatchlist(watchlist: Watchlist, title: String, description: String) = db.updateWatchlist(watchlist.copy(name = title, description = description))
+
 }
