@@ -1,6 +1,9 @@
 package dev.sanskar.photoplay.ui.composables
 
-import android.app.Dialog
+import androidx.compose.animation.animateColor
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,11 +24,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.Checkbox
-import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -42,7 +43,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -126,6 +126,20 @@ fun AddMovieToWatchLists(
     onWatchlistCreate: (String, String) -> Unit,
     onClick: (List<Pair<Watchlist, Boolean>>) -> Unit,
 ) {
+    val animatedBackgroundColor by rememberInfiniteTransition().animateColor(
+        initialValue = Color(0xFF4A148C),
+        targetValue = Color(0xFFBF360C),
+        animationSpec = infiniteRepeatable(
+            animation = keyframes {
+                durationMillis = 10000
+                Color(0xFF1A237E) at 2000
+                Color(0xFF004D40) at 5000
+                Color(0xFF01579B) at 8000
+            },
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+
     val watchlistStates = remember {
         mutableStateListOf<Pair<Watchlist, Boolean>>().also {
             it.addAll(checklist)
@@ -166,13 +180,7 @@ fun AddMovieToWatchLists(
                 ) {
                     Box(
                         modifier = Modifier
-                            .background(brush = Brush.horizontalGradient(listOf(
-                                Color(0xFF4A148C),
-                                Color(0xFF1A237E),
-                                Color(0xFF004D40),
-                                Color(0xFF01579B),
-                                Color(0xFFBF360C)
-                            )))
+                            .background(animatedBackgroundColor)
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -188,7 +196,8 @@ fun AddMovieToWatchLists(
                             Text(
                                 text = movie.title,
                                 style = MaterialTheme.typography.h2,
-                                modifier = Modifier.padding(16.dp)
+                                modifier = Modifier.padding(16.dp),
+                                color = MaterialTheme.colors.onPrimary
                             )
                         }
                     }
