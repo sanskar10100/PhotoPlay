@@ -122,7 +122,7 @@ class WatchlistFragment : Fragment() {
         }
     }
 
-    @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
+    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun Watchlists(watchlists: List<Watchlist>, modifier: Modifier = Modifier) {
         LazyColumn(
@@ -148,6 +148,36 @@ class WatchlistFragment : Fragment() {
                     openDeleteConfirmDialog = false
                 }
 
+                DropdownMenu(
+                    expanded = menuOpened,
+                    onDismissRequest = { menuOpened = false },
+                ) {
+                    DropdownMenuItem(
+                        onClick = {
+                            openEditDialog = true
+                            menuOpened = false
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = null
+                        )
+                        Text("Edit")
+                    }
+                    DropdownMenuItem(
+                        onClick = {
+                            openDeleteConfirmDialog = true
+                            menuOpened = false
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = null
+                        )
+                        Text("Delete")
+                    }
+                }
+
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -164,52 +194,17 @@ class WatchlistFragment : Fragment() {
                             }
                         ),
                 ) {
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        DropdownMenu(
-                            expanded = menuOpened,
-                            onDismissRequest = { menuOpened = false },
-                            modifier = Modifier.align(Alignment.Center)
-                        ) {
-                            DropdownMenuItem(
-                                onClick = {
-                                    openEditDialog = true
-                                    menuOpened = false
-                                }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Edit,
-                                    contentDescription = null
-                                )
-                                Text("Edit")
-                            }
-                            DropdownMenuItem(
-                                onClick = {
-                                    openDeleteConfirmDialog = true
-                                    menuOpened = false
-                                }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Delete,
-                                    contentDescription = null
-                                )
-                                Text("Delete")
-                            }
-                        }
-
-                        Column {
-                            Text(
-                                text = watchlist.name,
-                                style = MaterialTheme.typography.h2,
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                            )
-                            Text(
-                                text = watchlist.description,
-                                style = MaterialTheme.typography.body1,
-                                modifier = Modifier.padding(horizontal = 8.dp)
-                            )
-                        }
+                    Column {
+                        Text(
+                            text = watchlist.name,
+                            style = MaterialTheme.typography.h2,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        )
+                        Text(
+                            text = watchlist.description,
+                            style = MaterialTheme.typography.body1,
+                            modifier = Modifier.padding(horizontal = 8.dp)
+                        )
                     }
                 }
             }

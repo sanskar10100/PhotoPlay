@@ -186,15 +186,16 @@ class DetailFragment : Fragment() {
                             modifier = Modifier.padding(4.dp),
                             style = MaterialTheme.typography.body2.copy(fontFamily = MontserratFontFamily)
                         )
+                        Spacer(Modifier.height(16.dp))
                         Text(
                             text = "Similar",
                             textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.h6.copy(fontFamily = MontserratFontFamily),
+                            style = MaterialTheme.typography.h5.copy(fontFamily = MontserratFontFamily),
                             modifier = Modifier
                                 .align(Alignment.Start)
-                                .padding(8.dp),
-                            fontWeight = FontWeight.Bold
+                                .padding(horizontal = 8.dp),
                         )
+                        Divider(Modifier.padding(horizontal = 8.dp), thickness = 2.dp)
                         AnimatedVisibility(viewModel.movieRecommendations is UiState.Success) {
                             RecommendedMoviesRow(movies = (viewModel.movieRecommendations as UiState.Success).data.results)
                         }
