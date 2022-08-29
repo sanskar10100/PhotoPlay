@@ -1,5 +1,6 @@
 package dev.sanskar.photoplay.network
 
+import dev.sanskar.photoplay.data.MovieCast
 import dev.sanskar.photoplay.data.MovieDetails
 import dev.sanskar.photoplay.data.MoviesResponse
 import retrofit2.Response
@@ -29,4 +30,9 @@ interface MoviesBackendService {
     suspend fun getMovieDetails(
         @Path("movie_id") movieId: Int
     ): Response<MovieDetails>
+
+    @GET("movie/{movie_id}/credits")
+    suspend fun getMovieCast(
+        @Path("movie_id") movieId: Int
+    ): Response<MovieCast>
 }

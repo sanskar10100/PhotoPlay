@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.sanskar.photoplay.data.Movie
+import dev.sanskar.photoplay.data.MovieCast
 import dev.sanskar.photoplay.data.MovieDetails
 import dev.sanskar.photoplay.data.MovieWatchlistInclusion
 import dev.sanskar.photoplay.data.Repository
@@ -23,6 +24,7 @@ class DetailViewModel @Inject constructor(
 ) : ViewModel() {
 
     var movieDetails by mutableStateOf<UiState<MovieDetails>>(UiState.Loading)
+    var movieCast by mutableStateOf<UiState<MovieCast>>(UiState.Loading)
 
     var showAddMovieToWatchlistDialog by mutableStateOf(false)
     var movieWithWatchlistInclusionStatus = MovieWatchlistInclusion()
@@ -57,6 +59,7 @@ class DetailViewModel @Inject constructor(
     fun getMovieDetails(movieId: Int) {
         viewModelScope.launch {
             movieDetails = repo.getMovieDetails(movieId)
+            movieCast = repo.getMovieCast(movieId)
         }
     }
 }

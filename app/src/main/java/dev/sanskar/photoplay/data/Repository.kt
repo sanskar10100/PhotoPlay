@@ -16,13 +16,15 @@ class Repository @Inject constructor(
     private val db: WatchlistDao
 ) {
 
-    fun getWatchlists() = db.getAllWatchlists().map { if (it.isEmpty()) UiState.Empty else UiState.Success(it) }
+    fun getWatchlists() =
+        db.getAllWatchlists().map { if (it.isEmpty()) UiState.Empty else UiState.Success(it) }
 
     suspend fun addWatchlist(title: String, description: String) = db.addWatchlist(Watchlist(
         0,
         title,
         description,
-        SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.getDefault()).format(System.currentTimeMillis())
+        SimpleDateFormat("dd/MM/yyyy hh:mm a",
+            Locale.getDefault()).format(System.currentTimeMillis())
     ))
 
     suspend fun getMoviesForWatchlist(watchlistId: Int): UiState<Pair<Watchlist, List<MovieEntity>>> {
@@ -43,6 +45,8 @@ class Repository @Inject constructor(
 
     suspend fun getMovieDetails(movieId: Int) = networkResult { api.getMovieDetails(movieId) }
 
+    suspend fun getMovieCast(movieId: Int) = networkResult { api.getMovieCast(movieId) }
+
     suspend fun getMovieWithWatchlistInclusionStatus(movieId: Int): List<Pair<Watchlist, Boolean>> {
         val movieEntries = db.getMovieEntries(movieId)
         val watchlists = db.getAllWatchlistsOneShot()
@@ -57,7 +61,13 @@ class Repository @Inject constructor(
         return checkList
     }
 
-    suspend fun updateWatchlistInclusionsForMovie(includeIn: List<Pair<Watchlist, Boolean>>, id: Int, title: String, posterPath: String?, backdropPath: String?) {
+    suspend fun updateWatchlistInclusionsForMovie(
+        includeIn: List<Pair<Watchlist, Boolean>>,
+        id: Int,
+        title: String,
+        posterPath: String?,
+        backdropPath: String?
+    ) {
         includeIn.forEach { include ->
             if (!include.second) {
                 db.deleteMovie(id, include.first.id)
@@ -67,5 +77,7 @@ class Repository @Inject constructor(
         }
     }
 
-    suspend fun removeMovieFromWatchlist(movieId: Int, watchlistId: Int) = db.deleteMovie(movieId, watchlistId)
+    suspend fun removeMovieFromWatchlist(movieId: Int, watchlistId: Int) =
+        db.deleteMovie(movieId, watchlistId)
+
 }

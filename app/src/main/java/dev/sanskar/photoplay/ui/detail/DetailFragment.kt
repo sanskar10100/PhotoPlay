@@ -12,16 +12,22 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
@@ -56,7 +62,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import coil.compose.AsyncImage
 import dagger.hilt.android.AndroidEntryPoint
+import dev.sanskar.photoplay.data.Cast
 import dev.sanskar.photoplay.data.Movie
+import dev.sanskar.photoplay.data.MovieCast
 import dev.sanskar.photoplay.data.MovieDetails
 import dev.sanskar.photoplay.data.asMovie
 import dev.sanskar.photoplay.ui.composables.AddMovieToWatchLists
@@ -118,7 +126,9 @@ class DetailFragment : Fragment() {
                 }
                 is UiState.Success -> {
                     Column(
-                        horizontalAlignment = CenterHorizontally
+                        horizontalAlignment = CenterHorizontally,
+                        modifier = Modifier
+                            .verticalScroll(rememberScrollState())
                     ) {
                         AsyncImage(
                             model = state.data.backdrop_path?.getDownloadUrl() ?: state.data.poster_path?.getDownloadUrl() ?: "",
@@ -152,6 +162,9 @@ class DetailFragment : Fragment() {
                             }
                         }
                         AddToWatchlistButton(state.data)
+                        if (viewModel.movieCast is UiState.Success) {
+                            MovieCastRow((viewModel.movieCast as UiState.Success).data.cast.take(20))
+                        }
                         Text(
                             text = state.data.tagline,
                             textAlign = TextAlign.Center,
@@ -161,9 +174,40 @@ class DetailFragment : Fragment() {
                         Text(
                             text = state.data.overview,
                             textAlign = TextAlign.Justify,
-                            modifier = Modifier.padding(4.dp)
+                            modifier = Modifier.padding(4.dp),
+                            style = MaterialTheme.typography.body2.copy(fontFamily = MontserratFontFamily)
                         )
                     }
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun MovieCastRow(cast: List<Cast>, modifier: Modifier = Modifier) {
+        LazyRow(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier,
+            contentPadding = PaddingValues(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(cast) { castMember ->
+                Column(
+                    horizontalAlignment = CenterHorizontally
+                ) {
+                    AsyncImage(
+                        model = castMember.profile_path?.getDownloadUrl() ?: "",
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(92.dp)
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Crop
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        text = castMember.name,
+                        style = MaterialTheme.typography.subtitle2.copy(fontFamily = MontserratFontFamily)
+                    )
                 }
             }
         }
