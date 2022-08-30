@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import dev.sanskar.photoplay.ui.composables.MoviesGrid
@@ -46,20 +47,22 @@ class SearchResultFragment : Fragment() {
     @Composable
     fun SearchScreen() {
         val state by viewModel.searchResult.collectAsStateWithLifecycle()
-        val loading by derivedStateOf {
-            state is UiState.Loading
-        }
         when (val state = state) {
             is UiState.Loading -> {
-                ProgressBar(loading)
+                ProgressBar(true)
             }
+            is UiState.Empty -> {}
             is UiState.Error -> {
                 Text(state.message)
             }
             is UiState.Success -> {
                 MoviesGrid(
                     movies = state.data.results
-                )
+                ) {
+                    SearchResultFragmentDirections.actionSearchResultFragmentToDetailFragment(it.id).let {
+                        findNavController().navigate(it)
+                    }
+                }
             }
         }
     }

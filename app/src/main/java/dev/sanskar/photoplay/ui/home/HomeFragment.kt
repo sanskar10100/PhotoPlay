@@ -7,10 +7,9 @@ import android.view.ViewGroup
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.with
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,13 +25,14 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
+import androidx.compose.material.TabRowDefaults
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Theaters
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,33 +44,39 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.fragment.findNavController
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.PagerState
+import com.google.accompanist.pager.pagerTabIndicatorOffset
+import com.google.accompanist.pager.rememberPagerState
 import dagger.hilt.android.AndroidEntryPoint
 import dev.sanskar.photoplay.R
+import dev.sanskar.photoplay.ui.composables.AddMovieToWatchLists
 import dev.sanskar.photoplay.ui.composables.MoviesGrid
 import dev.sanskar.photoplay.ui.composables.ProgressBar
+import dev.sanskar.photoplay.ui.composables.ShortErrorSnackbar
 import dev.sanskar.photoplay.ui.theme.PhotoPlayTheme
 import dev.sanskar.photoplay.util.UiState
 import dev.sanskar.photoplay.util.clickWithRipple
 import kotlinx.coroutines.launch
+import logcat.logcat
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
     private val viewModel by viewModels<HomeViewModel>()
 
+    @OptIn(ExperimentalPagerApi::class)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -81,49 +87,82 @@ class HomeFragment : Fragment() {
             setContent {
                 PhotoPlayTheme {
                     val scaffoldState = rememberScaffoldState()
+                    val pagerState = rememberPagerState()
                     Scaffold(
-                        topBar = { HomeAppBar() },
+                        topBar = { HomeAppBar(pagerState) },
                         scaffoldState = scaffoldState,
                     ) {
-                        HomeContent(scaffoldState, Modifier.padding(it))
+                        HomeContent(scaffoldState, pagerState, modifier = Modifier.padding(it))
                     }
                 }
             }
         }
     }
 
-    @OptIn(ExperimentalLifecycleComposeApi::class)
+    @OptIn(ExperimentalPagerApi::class)
     @Composable
-    fun HomeContent(scaffoldState: ScaffoldState, modifier: Modifier = Modifier) {
-        val state by viewModel.moviesResponseMovies.collectAsStateWithLifecycle()
-        val loading = derivedStateOf {
-            state is UiState.Loading
-        }
-        when (val state = state) {
-            is UiState.Loading -> {
-            }
-            is UiState.Error -> {
-                val scope = rememberCoroutineScope()
-                LaunchedEffect(Unit) {
-                    scope.launch {
-                        scaffoldState.snackbarHostState.showSnackbar(state.message)
+    fun HomeContent(scaffoldState: ScaffoldState, pagerState: PagerState, modifier: Modifier = Modifier) {
+        logcat { "Home Content Recomposed" }
+        val scope = rememberCoroutineScope()
+        HorizontalPager(
+            count = 2,
+            state = pagerState,
+        ) { page ->
+            when (page) {
+                0 -> {
+                    LaunchedEffect(Unit) { viewModel.getPopularMovies() }
+                    when (val state = viewModel.popularMoviesResponse) {
+                        is UiState.Loading -> {
+                            ProgressBar(true)
+                        }
+                        is UiState.Empty -> {}
+                        is UiState.Error -> {
+                            scaffoldState.ShortErrorSnackbar(message = state.message)
+                        }
+                        is UiState.Success -> {
+                            MoviesGrid(movies = state.data.results) {
+                                HomeFragmentDirections.actionHomeFragmentToDetailFragment(it.id).let {
+                                    findNavController().navigate(it)
+                                }
+                            }
+                        }
+                    }
+                }
+                1 -> {
+                    LaunchedEffect(Unit) { viewModel.getTopRatedMovies() }
+                    BackHandler(pagerState.currentPage == 1) {
+                        scope.launch {
+                            pagerState.animateScrollToPage(0)
+                        }
+                    }
+                    when (val state = viewModel.topRatedMoviesResponse) {
+                        is UiState.Loading -> {
+                            ProgressBar(true)
+                        }
+                        is UiState.Empty -> {}
+                        is UiState.Error -> {
+                            scaffoldState.ShortErrorSnackbar(message = state.message)
+                        }
+                        is UiState.Success -> {
+                            MoviesGrid(movies = state.data.results) {
+                                HomeFragmentDirections.actionHomeFragmentToDetailFragment(it.id).let {
+                                    findNavController().navigate(it)
+                                }
+                            }
+                        }
                     }
                 }
             }
-            is UiState.Success -> {
-                MoviesGrid(movies = state.data.results, modifier)
-            }
         }
-        ProgressBar(loading.value)
     }
 
-    @OptIn(ExperimentalAnimationApi::class)
+    @OptIn(ExperimentalAnimationApi::class, ExperimentalPagerApi::class)
     @Composable
-    fun HomeAppBar() {
+    fun HomeAppBar(pagerState: PagerState) {
         var searchMode by remember { mutableStateOf(false) }
         val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.movies))
-        val progress by animateLottieCompositionAsState(composition, iterations = LottieConstants.IterateForever)
-        var tabIndex by remember { mutableStateOf(0) }
+        val progress by animateLottieCompositionAsState(composition,
+            iterations = LottieConstants.IterateForever)
         BackHandler(searchMode) {
             searchMode = false
         }
@@ -131,7 +170,8 @@ class HomeFragment : Fragment() {
         AnimatedContent(
             targetState = searchMode,
             transitionSpec = {
-                slideIntoContainer(AnimatedContentScope.SlideDirection.Up, animationSpec = tween(500)) with slideOutOfContainer(
+                slideIntoContainer(AnimatedContentScope.SlideDirection.Up,
+                    animationSpec = tween(500)) with slideOutOfContainer(
                     AnimatedContentScope.SlideDirection.Up, animationSpec = tween(500))
             },
             modifier = Modifier.fillMaxWidth(),
@@ -148,7 +188,17 @@ class HomeFragment : Fragment() {
                     Box(
                         modifier = Modifier.fillMaxWidth()
                     ) {
-
+                        Icon(
+                            imageVector = Icons.Default.Theaters,
+                            contentDescription = "Watchlist",
+                            modifier = Modifier
+                                .align(Alignment.CenterStart)
+                                .padding(start = 16.dp)
+                                .scale(1.5f)
+                                .clickWithRipple {
+                                    findNavController().navigate(R.id.action_homeFragment_to_watchlistFragment)
+                                }
+                        )
                         LottieAnimation(
                             composition = composition,
                             progress = { progress },
@@ -169,26 +219,36 @@ class HomeFragment : Fragment() {
                         )
                     }
                     Divider()
-                    TabRow(selectedTabIndex = tabIndex) {
+                    val scope = rememberCoroutineScope()
+                    TabRow(
+                        selectedTabIndex = pagerState.currentPage,
+                        indicator = { tabPositions ->
+                            TabRowDefaults.Indicator(
+                                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                            )
+                        }
+                    ) {
                         Tab(
-                          selected = tabIndex == 0,
-                          onClick = {
-                              tabIndex = 0
-                              viewModel.getPopularMovies()
-                          },
-                          text = {
-                              Text("Popular")
-                          }
+                            selected = pagerState.currentPage == 0,
+                            onClick = {
+                                scope.launch {
+                                    pagerState.animateScrollToPage(0)
+                                }
+                            },
+                            text = {
+                                Text("Popular")
+                            }
                         )
                         Tab(
-                          selected = tabIndex == 1,
-                          onClick = {
-                              tabIndex = 1
-                              viewModel.getTopRatedMovies()
-                          },
-                          text = {
-                              Text("Top Rated")
-                          }
+                            selected = pagerState.currentPage == 1,
+                            onClick = {
+                                scope.launch {
+                                    pagerState.animateScrollToPage(1)
+                                }
+                            },
+                            text = {
+                                Text("Top Rated")
+                            }
                         )
                     }
                 }

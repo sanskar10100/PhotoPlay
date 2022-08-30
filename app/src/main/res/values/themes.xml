@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.PhotoPlay" parent="Theme.AppCompat.DayNight.NoActionBar" />
+    <style name="Theme.PhotoPlay" parent="Theme.AppCompat.Light.NoActionBar" />
 
     <style name="Theme.PhotoPlay.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">#002B87</item>
