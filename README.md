@@ -11,7 +11,8 @@ A simple Android app that helps you explore movies and build your watchlist.
 - MVVM with Repository
 - Dependency Injection using Hilt
 - Navigation Component (fragments)
-- Coil
+- [Lottie](https://github.com/airbnb/lottie)
+- [Coil](https://github.com/coil-kt/coil)
 - Retrofit
 - Moshi
 - Room
