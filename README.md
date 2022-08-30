@@ -1,6 +1,9 @@
 # PhotoPlay
 A simple Android app that helps you explore movies and build your watchlist.
 
+## ScreenCap
+![PhotoPlay](https://user-images.githubusercontent.com/22092047/187370949-be36e3ab-f808-47fd-a2d0-e2f83f792ac5.jpeg)
+
 ## Major Components
 - Kotlin (+Coroutines and Flow)
 - Android SDK 33
