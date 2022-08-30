@@ -16,6 +16,6 @@ A simple Android app that helps you explore movies and build your watchlist.
 - Retrofit
 - Moshi
 - Room
-- Compose Accompanist (SwipeRefresh, Pager, Placeholder)
+- Compose Accompanist (Pager)
 - [logcat](https://github.com/square/logcat)
 - [SplashScreen Compat](https://developer.android.com/develop/ui/views/launch/splash-screen/migrate#migrate_your_splash_screen_implementation)
