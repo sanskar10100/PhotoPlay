@@ -18,6 +18,7 @@ class Repository @Inject constructor(
 
     private val topRatedMovies = mutableListOf<Movie>()
     private val popularMovies = mutableListOf<Movie>()
+    private var isLoading = false
 
     fun getWatchlists() =
         db.getAllWatchlists().map { if (it.isEmpty()) UiState.Empty else UiState.Success(it) }
@@ -40,7 +41,8 @@ class Repository @Inject constructor(
         }
     }
 
-    suspend fun getTopRatedMovies(): UiState<List<Movie>> {
+    suspend fun getTopRatedMovies(): UiState<List<Movie>>? {
+        if (isLoading) return null
         val page = if (topRatedMovies.size == 0) 1 else (topRatedMovies.size / 20) + 1
         val response = networkResult { api.getTopRatedMovies(page) }
         return if (response is UiState.Success) {
@@ -57,7 +59,8 @@ class Repository @Inject constructor(
         }
     }
 
-    suspend fun getPopularMovies(): UiState<List<Movie>> {
+    suspend fun getPopularMovies(): UiState<List<Movie>>? {
+        if (isLoading) return null
         val page = if (popularMovies.size == 0) 1 else (popularMovies.size / 20) + 1
         val response = networkResult { api.getPopularMovies(page) }
         return if (response is UiState.Success) {

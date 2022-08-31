@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentScope
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.with
@@ -62,7 +61,6 @@ import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import dagger.hilt.android.AndroidEntryPoint
 import dev.sanskar.photoplay.R
-import dev.sanskar.photoplay.ui.composables.AddMovieToWatchLists
 import dev.sanskar.photoplay.ui.composables.MoviesGrid
 import dev.sanskar.photoplay.ui.composables.ProgressBar
 import dev.sanskar.photoplay.ui.composables.ShortErrorSnackbar
@@ -110,8 +108,7 @@ class HomeFragment : Fragment() {
         ) { page ->
             when (page) {
                 0 -> {
-                    LaunchedEffect(Unit) { viewModel.getPopularMovies() }
-                    when (val state = viewModel.popularMoviesResponse) {
+                    when (val state = viewModel.popularMovies) {
                         is UiState.Loading -> {
                             ProgressBar(true)
                         }
@@ -120,7 +117,10 @@ class HomeFragment : Fragment() {
                             scaffoldState.ShortErrorSnackbar(message = state.message)
                         }
                         is UiState.Success -> {
-                            MoviesGrid(movies = state.data) {
+                            MoviesGrid(
+                                movies = state.data,
+                                onLastItemReached = { viewModel.getPopularMovies() }
+                            ) {
                                 HomeFragmentDirections.actionHomeFragmentToDetailFragment(it.id).let {
                                     findNavController().navigate(it)
                                 }
@@ -129,13 +129,12 @@ class HomeFragment : Fragment() {
                     }
                 }
                 1 -> {
-                    LaunchedEffect(Unit) { viewModel.getTopRatedMovies() }
                     BackHandler(pagerState.currentPage == 1) {
                         scope.launch {
                             pagerState.animateScrollToPage(0)
                         }
                     }
-                    when (val state = viewModel.topRatedMoviesResponse) {
+                    when (val state = viewModel.topRatedMovies) {
                         is UiState.Loading -> {
                             ProgressBar(true)
                         }
@@ -144,7 +143,10 @@ class HomeFragment : Fragment() {
                             scaffoldState.ShortErrorSnackbar(message = state.message)
                         }
                         is UiState.Success -> {
-                            MoviesGrid(movies = state.data) {
+                            MoviesGrid(
+                                movies = state.data,
+                                onLastItemReached = { viewModel.getTopRatedMovies() }
+                            ) {
                                 HomeFragmentDirections.actionHomeFragmentToDetailFragment(it.id).let {
                                     findNavController().navigate(it)
                                 }
