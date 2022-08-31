@@ -16,6 +16,9 @@ class Repository @Inject constructor(
     private val db: WatchlistDao
 ) {
 
+    private val topRatedMovies = mutableListOf<Movie>()
+    private val popularMovies = mutableListOf<Movie>()
+
     fun getWatchlists() =
         db.getAllWatchlists().map { if (it.isEmpty()) UiState.Empty else UiState.Success(it) }
 
@@ -37,9 +40,39 @@ class Repository @Inject constructor(
         }
     }
 
-    suspend fun getTopRatedMovies() = networkResult { api.getTopRatedMovies() }
+    suspend fun getTopRatedMovies(): UiState<List<Movie>> {
+        val page = if (topRatedMovies.size == 0) 1 else (topRatedMovies.size / 20) + 1
+        val response = networkResult { api.getTopRatedMovies(page) }
+        return if (response is UiState.Success) {
+            topRatedMovies.addAll(response.data.results)
+            UiState.Success(topRatedMovies.toList())
+        } else if (response is UiState.Error) {
+            if (topRatedMovies.size == 0) {
+                UiState.Error(response.message)
+            } else {
+                UiState.Success(topRatedMovies.toList())
+            }
+        } else {
+            UiState.Error("Something went wrong")
+        }
+    }
 
-    suspend fun getPopularMovies() = networkResult { api.getPopularMovies() }
+    suspend fun getPopularMovies(): UiState<List<Movie>> {
+        val page = if (popularMovies.size == 0) 1 else (popularMovies.size / 20) + 1
+        val response = networkResult { api.getPopularMovies(page) }
+        return if (response is UiState.Success) {
+            popularMovies.addAll(response.data.results)
+            UiState.Success(popularMovies.toList())
+        } else if (response is UiState.Error) {
+            if (popularMovies.size == 0) {
+                UiState.Error(response.message)
+            } else {
+                UiState.Success(popularMovies.toList())
+            }
+        } else {
+            UiState.Error("Something went wrong")
+        }
+    }
 
     suspend fun searchMovie(query: String) = networkResult { api.getMoviesForQuery(query) }
 

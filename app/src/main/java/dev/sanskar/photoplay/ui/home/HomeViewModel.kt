@@ -1,6 +1,7 @@
 package dev.sanskar.photoplay.ui.home
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -20,8 +21,10 @@ import logcat.logcat
 class HomeViewModel @Inject constructor(
     private val repo: Repository
 ) : ViewModel() {
-    var popularMoviesResponse by mutableStateOf<UiState<MoviesResponse>>(UiState.Loading)
-    var topRatedMoviesResponse by mutableStateOf<UiState<MoviesResponse>>(UiState.Loading)
+    var popularMoviesResponse by mutableStateOf<UiState<List<Movie>>>(UiState.Loading)
+    var topRatedMoviesResponse by mutableStateOf<UiState<List<Movie>>>(UiState.Loading)
+
+    val popularMovies = mutableStateListOf<Movie>()
 
     init {
         getPopularMovies()

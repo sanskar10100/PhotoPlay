@@ -120,7 +120,7 @@ class HomeFragment : Fragment() {
                             scaffoldState.ShortErrorSnackbar(message = state.message)
                         }
                         is UiState.Success -> {
-                            MoviesGrid(movies = state.data.results) {
+                            MoviesGrid(movies = state.data) {
                                 HomeFragmentDirections.actionHomeFragmentToDetailFragment(it.id).let {
                                     findNavController().navigate(it)
                                 }
@@ -144,7 +144,7 @@ class HomeFragment : Fragment() {
                             scaffoldState.ShortErrorSnackbar(message = state.message)
                         }
                         is UiState.Success -> {
-                            MoviesGrid(movies = state.data.results) {
+                            MoviesGrid(movies = state.data) {
                                 HomeFragmentDirections.actionHomeFragmentToDetailFragment(it.id).let {
                                     findNavController().navigate(it)
                                 }

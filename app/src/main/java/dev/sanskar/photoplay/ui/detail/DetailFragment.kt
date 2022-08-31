@@ -72,12 +72,10 @@ import coil.compose.AsyncImage
 import dagger.hilt.android.AndroidEntryPoint
 import dev.sanskar.photoplay.data.Cast
 import dev.sanskar.photoplay.data.Movie
-import dev.sanskar.photoplay.data.MovieCast
 import dev.sanskar.photoplay.data.MovieDetails
 import dev.sanskar.photoplay.data.asMovie
 import dev.sanskar.photoplay.ui.composables.AddMovieToWatchLists
 import dev.sanskar.photoplay.ui.composables.ErrorDialog
-import dev.sanskar.photoplay.ui.composables.MoviesGrid
 import dev.sanskar.photoplay.ui.composables.ProgressBar
 import dev.sanskar.photoplay.ui.theme.MontserratFontFamily
 import dev.sanskar.photoplay.ui.theme.PhotoPlayTheme
