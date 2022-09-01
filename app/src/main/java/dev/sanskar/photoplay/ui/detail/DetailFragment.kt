@@ -172,6 +172,7 @@ class DetailFragment : Fragment() {
                         AnimatedVisibility(viewModel.movieCast is UiState.Success) {
                             MovieCastRow((viewModel.movieCast as UiState.Success).data.cast.take(20))
                         }
+                        Spacer(Modifier.height(16.dp))
                         Text(
                             text = state.data.tagline,
                             textAlign = TextAlign.Center,
@@ -250,7 +251,7 @@ class DetailFragment : Fragment() {
         LazyRow(
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier,
-            contentPadding = PaddingValues(8.dp),
+            contentPadding = PaddingValues(horizontal = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(cast) { castMember ->
