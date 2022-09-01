@@ -26,17 +26,13 @@ class HomeViewModel @Inject constructor(
 
     fun getPopularMovies() {
         viewModelScope.launch {
-             repo.getPopularMovies()?.let {
-                 popularMovies = it
-            }
+             popularMovies = repo.getPopularMovies()
         }
     }
 
     fun getTopRatedMovies() {
         viewModelScope.launch {
-            repo.getTopRatedMovies()?.let {
-                topRatedMovies = it
-            }
+            topRatedMovies = repo.getTopRatedMovies()
         }
     }
 }
