@@ -1,6 +1,9 @@
 # PhotoPlay
 A simple Android app that helps you explore movies and build your watchlist.
 
+## Animations In Action
+https://user-images.githubusercontent.com/22092047/188185943-a75a286d-e9ca-48e3-9569-947cc56303da.mp4
+
 ## ScreenCap
 ![PhotoPlay](https://user-images.githubusercontent.com/22092047/187370949-be36e3ab-f808-47fd-a2d0-e2f83f792ac5.jpeg)
 
