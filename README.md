@@ -20,3 +20,13 @@ A simple Android app that helps you explore movies and build your watchlist.
 - Compose Accompanist (Pager)
 - [logcat](https://github.com/square/logcat)
 - [SplashScreen Compat](https://developer.android.com/develop/ui/views/launch/splash-screen/migrate#migrate_your_splash_screen_implementation)
+
+## Build and Run
+- Clone the repo
+- Open in Android Studio
+- Obtain an API key from [TMDB](https://developers.themoviedb.org/3), and add it in your `local.properties` with the name `API_KEY`
+```aidl
+API_KEY="YOUR_API_KEY" // Don't forget the quotes
+```
+- Build and run
+- Alternatively, download the latest APK from the assets on the [releases](https://github.com/sanskar10100/PhotoPlay/releases) page
