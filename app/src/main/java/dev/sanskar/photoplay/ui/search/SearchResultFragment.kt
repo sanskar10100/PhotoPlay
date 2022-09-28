@@ -6,18 +6,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -61,40 +65,59 @@ class SearchResultFragment : Fragment() {
     @Composable
     fun SearchScreen() {
         val state by viewModel.searchResult.collectAsStateWithLifecycle()
-        when (val state = state) {
-            is UiState.Loading -> {
-                ProgressBar(true)
-            }
-            is UiState.Empty -> {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+
+            SearchBar()
+
+            when (val state = state) {
+                is UiState.Loading -> {
+                    ProgressBar(true)
+                }
+                is UiState.Empty -> {
                     LottieAnimation(
                         composition = rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.empty)).value,
                         iterations = LottieConstants.IterateForever,
                         modifier = Modifier.weight(1f)
                     )
                     Text(
-                        text = "No results found",
+                        text = "No results found, are you sure you typed the right thing?",
                         style = MaterialTheme.typography.h6,
-                        modifier = Modifier.padding(top = 32.dp, bottom = 64.dp)
+                        modifier = Modifier.padding(top = 32.dp, bottom = 64.dp),
+                        textAlign = TextAlign.Center
                     )
                 }
-            }
-            is UiState.Error -> {
-                Text(state.message)
-            }
-            is UiState.Success -> {
-                MoviesGrid(
-                    movies = state.data.results
-                ) {
-                    SearchResultFragmentDirections.actionSearchResultFragmentToDetailFragment(it.id).let {
-                        findNavController().navigate(it)
+                is UiState.Error -> {
+                    Text(state.message)
+                }
+                is UiState.Success -> {
+                    MoviesGrid(
+                        movies = state.data.results,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        SearchResultFragmentDirections.actionSearchResultFragmentToDetailFragment(it.id).let {
+                            findNavController().navigate(it)
+                        }
                     }
                 }
             }
         }
+    }
+
+    @Composable
+    fun SearchBar(modifier: Modifier = Modifier) {
+        OutlinedTextField(
+            value = viewModel.searchQuery,
+            onValueChange = { viewModel.search(it) },
+            label = { Text("Search") },
+            placeholder = { Text("Top Gun: Maverick") },
+            leadingIcon = { Icon(imageVector = Icons.Default.Search, contentDescription = "Search") },
+            singleLine = true,
+            modifier = modifier
+                .padding(vertical = 16.dp)
+                .fillMaxWidth(0.9f)
+        )
     }
 }
