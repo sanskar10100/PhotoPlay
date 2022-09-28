@@ -22,7 +22,13 @@ class SearchViewModel @Inject constructor(
 
     fun search(query: String) {
         viewModelScope.launch {
-            searchResult.value = repo.searchMovie(query)
+            searchResult.value = repo.searchMovie(query).let {
+                if (it is UiState.Success && it.data.results.isEmpty()) {
+                    UiState.Empty
+                } else {
+                    it
+                }
+            }
         }
     }
 }
