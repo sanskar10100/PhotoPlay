@@ -76,12 +76,12 @@ class WatchlistFragment : Fragment() {
                                     Icon(
                                         imageVector = Icons.Default.Add,
                                         contentDescription = null,
-                                        modifier = Modifier.padding(start = 4.dp)
+                                        modifier = Modifier.padding(start = 8.dp)
                                     )
                                     Text(
                                         text = "Add Watchlist",
                                         style = MaterialTheme.typography.h3,
-                                        modifier = Modifier.padding(4.dp)
+                                        modifier = Modifier.padding(end = 8.dp)
                                     )
                                 }
                             }
