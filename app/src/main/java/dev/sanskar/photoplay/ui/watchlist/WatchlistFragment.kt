@@ -148,36 +148,6 @@ class WatchlistFragment : Fragment() {
                     openDeleteConfirmDialog = false
                 }
 
-                DropdownMenu(
-                    expanded = menuOpened,
-                    onDismissRequest = { menuOpened = false },
-                ) {
-                    DropdownMenuItem(
-                        onClick = {
-                            openEditDialog = true
-                            menuOpened = false
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Edit,
-                            contentDescription = null
-                        )
-                        Text("Edit")
-                    }
-                    DropdownMenuItem(
-                        onClick = {
-                            openDeleteConfirmDialog = true
-                            menuOpened = false
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = null
-                        )
-                        Text("Delete")
-                    }
-                }
-
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -205,6 +175,36 @@ class WatchlistFragment : Fragment() {
                             style = MaterialTheme.typography.body1,
                             modifier = Modifier.padding(horizontal = 8.dp)
                         )
+                    }
+
+                    DropdownMenu(
+                        expanded = menuOpened,
+                        onDismissRequest = { menuOpened = false },
+                    ) {
+                        DropdownMenuItem(
+                            onClick = {
+                                openEditDialog = true
+                                menuOpened = false
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Edit,
+                                contentDescription = null
+                            )
+                            Text("Edit")
+                        }
+                        DropdownMenuItem(
+                            onClick = {
+                                openDeleteConfirmDialog = true
+                                menuOpened = false
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = null
+                            )
+                            Text("Delete")
+                        }
                     }
                 }
             }
