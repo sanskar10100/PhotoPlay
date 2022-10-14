@@ -14,6 +14,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -210,6 +211,7 @@ class DetailFragment : Fragment() {
         LazyRow(
             contentPadding = PaddingValues(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = modifier
         ) {
             items(movies, key = {
                 it.id
@@ -225,13 +227,16 @@ class DetailFragment : Fragment() {
                         }
                 ) {
                     Column(
-                        horizontalAlignment = CenterHorizontally
+                        horizontalAlignment = CenterHorizontally,
+                        modifier = Modifier.width(IntrinsicSize.Min)                      
                     ) {
                         AsyncImage(
                             model = movie.poster_path?.getDownloadUrl() ?: movie.backdrop_path?.getDownloadUrl() ?: "",
                             contentDescription = null,
                             contentScale = ContentScale.FillBounds,
-                            modifier = Modifier.clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)),
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
+                                .widthIn(min = 192.dp)
                         )
                         Text(
                             text = movie.title,
