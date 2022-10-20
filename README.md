@@ -1,5 +1,7 @@
 # PhotoPlay
-A simple Android app that helps you explore movies and build your watchlist.
+An Android app to help you explore and search 800k+ movies as well as create and maintain your watchlist.
+
+<a href='https://play.google.com/store/apps/details?id=dev.sanskar.photoplay&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'  width="30%" height="30%"/></a>
 
 ## Animations In Action
 https://user-images.githubusercontent.com/22092047/188185943-a75a286d-e9ca-48e3-9569-947cc56303da.mp4
